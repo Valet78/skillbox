@@ -27,15 +27,21 @@ int main() {
   cout << "Программа вычисления количества дней в указанном году." << endl;
   int inYear = ValidInt("Введите интересующий Вас год: ");
 
-  if (inYear % 4 == 0) {
-    if (inYear % 100 == 0 && inYear % 400 != 0) {
-        deyInYear = 365; // 2100, 2200, 2300, != 2400
-    } else {
-        deyInYear = 366;
-    }
+  if (inYear % 4 == 0 && !(inYear % 100 == 0 && inYear % 400 != 0)){
+    deyInYear = 366;
   } else {
     deyInYear = 365;
   }
+
+  // if (inYear % 4 == 0) {
+  //   if (inYear % 100 == 0 && inYear % 400 != 0) {
+  //       deyInYear = 365; // 2100, 2200, 2300, != 2400
+  //   } else {
+  //       deyInYear = 366;
+  //   }
+  // } else {
+  //   deyInYear = 365;
+  // }
 
   cout << "В указанном Вами " << inYear << " году " << deyInYear << " дней." << endl;
 
