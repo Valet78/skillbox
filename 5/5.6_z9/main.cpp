@@ -1,5 +1,5 @@
 /*
-Задание 9. Треугольник на координатной плоскости
+Задание 5.6.9. Треугольник на координатной плоскости
 
 Проверьте, образуют ли треугольник три данные точки на координатной плоскости. Каждая точка задается
 двумя координатами. Таким образом, на вход программе даётся шесть чисел: координаты первой точки, 
@@ -54,22 +54,15 @@ int main() {
   float point_x3 = ValidInt("\tx3 = ");
   float point_y3 = ValidInt("\ty3 = ");
   cout << "--------------------------------" << endl;
-
-  if (point_x1 != point_x2 && point_x1 != point_x3 && point_x2 != point_x3){
-    // Прямые не должны быть параллельны относительно друг друга
-    float k1 = float(point_y2 - point_y1) / float(point_x2 - point_x1);
-    float k2 = float(point_y2 - point_y3) / float(point_x2 - point_x3);
-    float k3 = float(point_y3 - point_y1) / float(point_x3 - point_x1);    
-    
-    if (k1 != k2 && k1 != k3 && k2 != k3){
+  
+  if (((point_y1 - point_y2) * (point_x3 - point_x2) != (point_x1 - point_x2) * (point_y3 - point_y2))
+    && ((point_y2 - point_y3) * (point_x1 - point_x3) != (point_x2 - point_x3) * (point_y1 - point_y3))
+    && ((point_y3 - point_y1) * (point_x2 - point_x1) != (point_x3 - point_x1) * (point_y2 - point_y1)))
+    {
       cout << "Данные три точки задают треугольник." << endl;
     } else {
-      cout << "Данные три точки не задают треугольник." << endl;
-    }  
-  } else {
-    // ситуация "деление на ноль" !!!
-    cout << "Координаты x1, x2 и x3 не могут быть одинаковыми!" << endl;
-  }
+      cout << "Данные три точки не задают треугольник." << endl;  
+    }
    
   return 0;
 }

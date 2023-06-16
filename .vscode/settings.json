@@ -1,6 +1,6 @@
 {
     "C_Cpp.errorSquiggles": "enabled",
-    "C_Cpp.default.compilerPath": "L:\\msys64\\mingw64\\bin\\g++.exe",
+    "C_Cpp.default.compilerPath": "${env:userHome}\\msys64\\mingw64\\bin\\g++.exe",
     "files.associations": {
         "array": "cpp",
         "atomic": "cpp",
@@ -46,5 +46,7 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "typeinfo": "cpp"
-    }
+    },
+    "files.encoding": "utf8",
+    "terminal.integrated.detectLocale": "on"
 }

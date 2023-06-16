@@ -33,11 +33,12 @@ int main() {
   cout << "---------------------" << endl;
 
   int remains = inSum % 10;
+  int ten = (inSum / 10) % 10;
   string outTxt = "";
-
-  if (remains == 1){
+  
+  if (remains == 1 && ten != 1){
     outTxt = " рубль.";
-  } else if (remains == 2 || remains == 3 || remains == 4){
+  } else if ((remains == 2 || remains == 3 || remains == 4) && ten != 1){
     outTxt = " рубля.";
   } else {
     outTxt = " рублей.";

@@ -62,62 +62,51 @@ bool ValidDate(int inYear, int inMonth, int inDay){
 }
 
 int main() {
-  // Ввод текущей даты
+  
   cout << "Программа посчитает Ваш возраст." << endl;
-  cout << "Введите текущие" << endl;
-  int currentYear = ValidInt("\tгод: ");  
-  int currentMonth = ValidInt("\tмесяц: ");
-  int currentDay = ValidInt("\tдень: ");
-  bool valid = ValidDate(currentYear, currentMonth, currentDay);
-  cout << "----------------------------" << endl;
-    
-  while(!valid){    
-    cout << "Введены некорректные данные!!!" << valid << endl;
+  int currentYear = 0, birthYear = 0;  
+  int currentMonth = 0, birthMonth = 0;
+  int currentDay = 0, birthDay = 0;
+  bool valid = false;
+  
+  // Ввод текущей даты
+  do {
     cout << "Введите текущие" << endl;
     currentYear = ValidInt("\tгод: ");
     currentMonth = ValidInt("\tмесяц: ");
     currentDay = ValidInt("\tдень: ");
     valid = ValidDate(currentYear, currentMonth, currentDay);  
     cout << "----------------------------" << endl;
-  }
-  // Ввод дня рождения
-  cout << "Введите дату рождения" << endl;
-  int birthYear = ValidInt("\tгод: ");  
-  int birthMonth = ValidInt("\tмесяц: ");
-  int birthDay = ValidInt("\tдень: ");
-  valid = ValidDate(birthYear, birthMonth, birthDay);
-  cout << "----------------------------" << endl;
+    if (!valid) {
+      cout << "Введены некорректные данные!!!" << endl;
+    }
+  } while (!valid);
   
-  while(!valid){    
-    cout << "Введены некорректные данные!!!" << valid << endl;
+  // Ввод дня рождения
+  do {
     cout << "Введите дату рождения" << endl;
     birthYear = ValidInt("\tгод: ");  
     birthMonth = ValidInt("\tмесяц: ");
     birthDay = ValidInt("\tдень: ");
     valid = ValidDate(birthYear, birthMonth, birthDay);  
     cout << "----------------------------" << endl;
-  }
+    if (!valid) {
+      cout << "Введены некорректные данные!!!" << endl;
+    }
+  } while (!valid);
 
-  // if (currentYear > birthYear + 18){
-  //   cout << "По нашим подсчётам клиент старше 18 лет." << endl;
-  // } else if (currentYear == birthYear + 18){
-  //   if (birthMonth < currentMonth){
-  //     cout << "По нашим подсчётам клиент старше 18 лет." << endl;
-  //   } else if (birthMonth == currentMonth && birthDay < currentDay){
-  //     cout << "По нашим подсчётам клиент старше 18 лет." << endl;      
-  //   } else {
-  //     cout << "Клиенту не исполнилось 18 лет!!!" << endl;
-  //   }
-  // } else {
-  //   cout << "Клиенту не исполнилось 18 лет!!!" << endl;
-  // }
-
-  if ((currentYear - birthYear < 18) || ((currentYear - birthYear == 18)
-   && !(birthMonth == currentMonth && birthDay < currentDay))){
-    cout << "Клиенту не исполнилось 18 лет!!!" << endl;
-   } else {
+  if (currentYear - birthYear > 18){
     cout << "По нашим подсчётам клиент старше 18 лет." << endl;
-   }
-  
+  } else if (currentYear - birthYear == 18){
+    if (birthMonth < currentMonth){
+      cout << "По нашим подсчётам клиент старше 18 лет." << endl;
+    } else if (birthMonth == currentMonth && birthDay < currentDay){
+      cout << "По нашим подсчётам клиент старше 18 лет." << endl;
+    } else {
+      cout << "Клиенту не исполнилось 18 лет!!!" << endl;
+    }    
+  } else {
+    cout << "Клиенту не исполнилось 18 лет!!!" << endl;
+  }  
   return 0;
 }
