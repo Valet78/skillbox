@@ -1,5 +1,5 @@
 /*
-Задание6.5.4. Счастливый билетик
+Задание 6.5.4. Счастливый билетик
 В старину, когда даже в столице билеты в общественном транспорте выдавали контролёры, существовало
 поверье: если на билете сумма первых трёх цифр в номере билета равна сумме трёх последних, то это 
 к удаче. Напишите программу, которая получала бы на вход шестизначный номер билета и выводила, 
@@ -22,6 +22,7 @@ one_digit = digits % 10.
 */
 
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 // Проверка ввода строки и пустого ввода
@@ -39,59 +40,67 @@ string InputTxt(string inTxt){
 
 // Является ли числом
 bool IsDigit(string inTxt){
-  int point = 0;
+  // int point = 0;
   int ind = 0;
-  while(inTxt[ind] != '\0'){
-    if (inTxt[0] == '-'){
+  
+  for (int i = 0; i < inTxt.length(); i++){
+    if (i==0 && inTxt[0] == '-'){
       ind++;
-    } else if (inTxt[ind] == '.' && point == 0){
+      // Для чисел с плавающей точкой
+    // } else if (inTxt[i] == '.' && point == 0){
+    //   ind++;
+    //   point++;
+    //   continue;
+    } else if (int(inTxt[i]) >= 48 && int(inTxt[i] <= 57)){
       ind++;
-      point++;
-    } else if(int(inTxt[ind]) >= 48 && int(inTxt[ind]) <= 57){
-      ind++;
-    } else{
+    }  else {
       ind--;
     }
-  }
-  cout << ind << " - " << inTxt.length() << endl;
-  // if (ind == inTxt.length()){
-  //   return true;
-  // }  
-
+  }     
+  
+  if (ind == inTxt.length()){
+    return true;
+  }  
   return false;
 }
 
 // Извлекаем число из строки
-long ValidInDigit(string inTxt){
-  long result = 0; 
-  int valid = 1;
-  string resultTxt = "";
-  do {
-    valid = 1;
-    resultTxt = InputTxt(inTxt);
-    for(int i = 0; i < resultTxt.length(); i++){
-      // Проверка отрицательных чисел
-      if (resultTxt[0] == '-'){
-        continue;
-      }
-      valid *= isdigit(resultTxt[i]); 
-    }  
-    if (valid == 0){
-      cout << "Введённое значение не число! Попробуйте снова." << endl;      
-    } else {
-      result = stol(resultTxt);
-    }
-    if (result <= 0){
-      cout << "Введите число в диапазоне [1...1 000 000]!" << endl;
-    }
-  } while (valid == 0 || result <= 0 || result > 1000000);
-  
-  return result;
-}
+// int TxtInInteger(string inTxt){
+//   int result = stoi(inTxt);
+//   return result;
+// } 
 
 int main() {
+  string inNumTxt = "";
+  bool err = true;
+  int inNum = 0;
+  cout << "Программа выводит N-ое число последовательностии Фибоначчи." << endl;
   
-  IsDigit("2d65");
+  do {
+    inNumTxt = InputTxt("Укажите номер числа в последовательности (N - натуральное): ");
+    if (IsDigit(inNumTxt)){
+      inNum = stoi(inNumTxt);
+      if(inNum > 0){
+        err = false;
+      } else {
+        cout << "Введите целое число больше нуля!" << endl;
+      }
+    } else{
+      cout << "Введите целое число больше нуля!" << endl;
+    }
+  } while (err);
+
+  int fNum = 1, sNum = 1, nextNum = 1;
+  if (inNum > 2){
+    for (int i = 3; i <= inNum; i++){
+        nextNum = fNum + sNum;
+        fNum = sNum;
+        sNum = nextNum;
+    }    
+  }
+  
+  cout << "---------------------------------------------------------------" << endl;
+  cout << inNumTxt << "-ое число последовательностии Фибоначчи: " << nextNum << endl;
   
   return 0;
 }
