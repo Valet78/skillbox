@@ -109,24 +109,19 @@ int main() {
   }
 
   int nod = 1;
-  int min = (numerals < denominator) ? numerals : denominator;
-  bool split = true; 
-  do {
-    for (int i = 2; i <= min; i++){
-      if (numerals % i == 0 && denominator % i == 0){ 
-        numerals /= i;
-        denominator /= i;    
-        nod *= i;
-        break;                
-      } 
-      if (numerals / i == 1 || denominator / i == 1){
-        split = false;
+  int num1 = numerals, num2 = denominator;  
+
+  for (int k = 1; k <= num2; k++){
+    for (int l = 2; l <= num1; l++){
+      if (num1 % l == 0 && num2 % l == 0){
+        num1 /= l;
+        num2 /= l;    
+        nod *= l;
         break;
       }
-    }
-  } while (split);  
-
-  cout << numerals << "/" << denominator << endl;
+    }      
+  }
+  cout << numerals / nod << "/" << denominator / nod << endl;
   
   return 0;
 }

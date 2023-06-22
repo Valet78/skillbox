@@ -28,7 +28,7 @@ string InputTxt(string inTxt){
     getline(cin, result);
     if (result == ""){
       cout << "Вы забыли ввести значение! Попробуйте снова." << endl;
-    } else if (!(result == "да" || result == "нет")){
+    } else if (!(result == "да" || result == "нет" || result == "yes" || result == "no")){
       cout << "На вопросы отвечайте только \"да\" или \"нет\"." << endl;
     } else {
       err = false;
@@ -40,7 +40,7 @@ string InputTxt(string inTxt){
 
 int main() {
   cout << "Программа попытается угадать Ваше число." << endl;
-  cout << "На вопросы отвечайте только \"да\" или \"нет\"." << endl;
+  cout << "На вопросы отвечайте только \"да\" или \"нет\" (\"yes\" or \"no\")." << endl;
   cout << "------------------------------------------------" << endl;
   cout << "Загадайте число в диапазоне от 0 до 63." << endl;
   bool guess = false;
@@ -53,15 +53,15 @@ int main() {
       cout << "Вы загадали число больше " << mid << endl;
       answer = InputTxt("Ваш ответ: ");      
           
-      if (answer == "да") {
+      if (answer == "да" || answer == "yes") {
         begin = mid;        
       } else {        
         end = mid;
       }
     } else {            
-      cout << "Вы загадали число меньше " << mid << endl;
+      cout << "Вы загадали число меньше " << end << endl;
       answer = InputTxt("Ваш ответ: ");  
-      if (answer == "да") {
+      if (answer == "да" || answer == "yes") {
         cout << "Вы загадали число: " << begin << endl;
       } else {
         cout << "Вы загадали число: " << end << endl;
