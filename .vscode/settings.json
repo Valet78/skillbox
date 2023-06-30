@@ -45,7 +45,10 @@
         "ostream": "cpp",
         "stdexcept": "cpp",
         "streambuf": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "codecvt": "cpp",
+        "cstdarg": "cpp",
+        "ctime": "cpp"
     },
     "files.encoding": "utf8",
     "terminal.integrated.detectLocale": "on"
