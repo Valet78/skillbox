@@ -97,7 +97,7 @@ int main() {
 
   do {
     fireball = ValidNumFloat("Укажите мощность огненного шара: ");
-    damage = fireball * resistance;
+    damage = fireball - fireball * resistance;
     health -= damage;
     if (health > 0) {
       std::cout << "Нанесён урон " << damage << ", у орка осталось "<< health 

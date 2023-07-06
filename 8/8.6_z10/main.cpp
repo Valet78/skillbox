@@ -74,8 +74,14 @@ int main() {
   float numOne = ValidNumFloat("Введите первое число: ");
   float numTwo = ValidNumFloat("Введите второе число: ");
   std::cout << "--------------------------------------------------" << std::endl;
-  float max = 0.0f;
+  
+  float max = (numOne + numTwo) / 2.0f + std::abs(numOne - numTwo) / 2.0f;
+  // тогда минимальное найдём
+  // float min = (numOne + numTwo) / 2.0f - std::abs(numOne - numTwo) / 2.0f;
 
+  /*
+  // С использованием условных операторов, что противоречит
+  // условию задачи
   if (numOne >= 0 && numTwo >= 0){
     if (numOne > numTwo) {
       max = numOne;
@@ -93,6 +99,7 @@ int main() {
       max = numTwo;
     }
   }
+  */
   std::cout << "Из указанных чисел максимальным будет: " << max << std::endl;
   return 0;  
 }

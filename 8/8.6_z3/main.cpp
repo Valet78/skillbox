@@ -93,7 +93,7 @@ float ValidNumFloat(std::string request){
 }
 
 // Расчет количества с учётом распила
-int NumberCubes(float inNum){
+int NumberCubesSawed(float inNum){
   int result = 0, sawed = 0;
   float sum = 0.0f;
   
@@ -106,9 +106,13 @@ int NumberCubes(float inNum){
     if (sum > inNum){
       result --;
     }    
-  }
-  
+  }  
   return result;
+}
+
+// Расчет количества без учёта распила
+int NumberCubes(float inNum){  
+  return (int)inNum / 5;
 }
 
 int main() {
