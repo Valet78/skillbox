@@ -40,8 +40,6 @@ int main (){
             valid = false;
         }
 
-
-
     } while(k < 3 || !valid);
 
     return 0;

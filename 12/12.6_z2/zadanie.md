@@ -24,7 +24,7 @@
 
 `Подробнее о сложности и нотации большого O:`
 
-* <a gref = "https://tproger.ru/articles/computational-complexity-explained/"> 
+* <a href = "https://tproger.ru/articles/computational-complexity-explained/"> 
   Оценка сложности алгоритмов, или Что такое О(log n) 
   </a>
 * <a href = "https://skillbox.ru/media/code/big-o-notation-chto-eto-takoe-i-kak-eye-poschitat/"> 
