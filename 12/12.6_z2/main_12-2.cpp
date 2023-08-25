@@ -6,7 +6,6 @@ std::string CheckInputOfEmpty(std::string); // Проверка ввода ст�
 std::string CheckInputNumber(std::string); // Ввод элемента массива
 bool ValidNumber(std::string); // Проверка чисел
 
-
 int main(){
     std::string inMassive [15];
 
@@ -61,27 +60,20 @@ int main(){
                 flMass[start] = flNum;
             } else {
                 flMass[i] = flNum;
-            }
-            
-        
-            // std::cout << std::endl;
+            }      
+        }     
+    }    
 
-        }
-        
+    std::cout << "The resulting sorted array: ";
 
-    }
-    
-
-// Результат
+    // Результат
     for(int i = 0; i < 15; i++){
         std::cout << flMass[i] << " ";
     }
     std::cout << std::endl;    
 
-
     return 0;
 } 
-
 
 // Проверка ввода строки и пустого ввода
 std::string CheckInputOfEmpty(std::string inTxt){
@@ -114,7 +106,6 @@ std::string CheckInputNumber(std::string inTxt){
     return res;
 } 
 
-
 // Проверка чисел
 bool ValidNumber(std::string inTxt){
     bool res = true;
@@ -133,5 +124,3 @@ bool ValidNumber(std::string inTxt){
     
     return res;
 } 
-
-
