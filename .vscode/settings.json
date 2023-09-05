@@ -48,7 +48,9 @@
         "typeinfo": "cpp",
         "codecvt": "cpp",
         "cstdarg": "cpp",
-        "ctime": "cpp"
+        "ctime": "cpp",
+        "iomanip": "cpp",
+        "sstream": "cpp"
     },
     "files.encoding": "utf8",
     "terminal.integrated.detectLocale": "on"
