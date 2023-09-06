@@ -8,7 +8,8 @@ std::string CheckInputNumber(std::string); // Проверка на ввод ч�
 bool ValidNumber(std::string); // Проверка чисел
 int InputDigit(std::string, bool);    // Ввоод и получения одного положительного числа
 std::vector<std::string> GetArrayStrings(std::string);   // Получение вектора строк из строки
-std::vector<int> RemovingNumberFromVector(std::vector<int>, int); // Удаление числа из вектора
+// ФУНКЦИЮ НИЖЕ БОЛЕЕ НЕ ИСПОЛЬЗУЮ !!!
+// std::vector<int> RemovingNumberFromVector(std::vector<int>, int); // Удаление числа из вектора
 
 
 int main(){
@@ -39,7 +40,23 @@ int main(){
     }
     
     int inNumDel = InputDigit("Specify the number to remove from the vector: ", false);
-    vecNum = RemovingNumberFromVector(vecNum, inNumDel);
+    int ind = 0;
+
+    // Удаление элементов из вектора
+    do{
+        if(vecNum[ind] == inNumDel){
+            for(int i = ind; i < vecNum.size() - 1; i++){
+                vecNum[i] = vecNum[i + 1];
+            }
+            vecNum.pop_back();
+        } else {
+            ind++;
+        }
+        
+    
+    } while(ind != vecNum.size());
+
+    // vecNum = RemovingNumberFromVector(vecNum, inNumDel);    // Функция удаления элемента из вектора
     std::cout << "--------------------------------------------------------" << std::endl;
     std::cout << "Result of deleting a number: ";
 
@@ -86,7 +103,6 @@ std::string CheckInputNumber(std::string inTxt){
     return resTxt;
 } 
 
-
 // Проверка чисел
 bool ValidNumber(std::string inTxt){
     bool res = true;
@@ -130,6 +146,7 @@ std::vector<std::string> GetArrayStrings(std::string inTxt){
     return resVec;
 }  
 
+/*
 // Удаление числа из вектора
 std::vector<int> RemovingNumberFromVector(std::vector<int> inVec, int inNum){
     std::vector<int> resVect; 
@@ -143,3 +160,4 @@ std::vector<int> RemovingNumberFromVector(std::vector<int> inVec, int inNum){
 
     return resVect;
 }
+*/
