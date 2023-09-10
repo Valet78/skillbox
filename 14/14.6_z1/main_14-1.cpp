@@ -1,7 +1,6 @@
 // Задание 14.6.1. Банкетный стол
 
 #include<iostream>
-#include<vector>
 
 template<int rows, int col>
 
