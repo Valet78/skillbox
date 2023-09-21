@@ -9,9 +9,9 @@ void InputMatrix(float (&)[rows][col]);      // Ввод матрицы двум
 template<int rows, int col>
 void PrintMatrixVec(float (&)[rows][col], float (&)[rows]);      // Вывод матрицы двумерной и вектора
 template<int rows>
-void InputVector(float (&)[rows]);      // Ввод матрицы двумерной
+void InputVector(float (&)[rows]);      // Ввод матрицы одномерной (вектора)
 template<int rows>
-void PrintVector(float (&)[rows]);      // Вывод матрицы двумерной
+void PrintVector(float (&)[rows]);      // Вывод матрицы одномерной (вектора)
 template<int rows, int col, typename name_t>
 void MultiplicatMatrixVector(name_t (&)[rows][col], name_t (&)[rows]); // Перемножение матрицы и вектора
 
