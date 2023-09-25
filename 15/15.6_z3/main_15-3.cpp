@@ -29,12 +29,12 @@ int main(){
             // Print(inVec);
             std::cout << "The fifth element: " << inVec[4] << std::endl;
 
-        } else if(num == -1){
-            std::cout << "Not enough elements! You need to enter 5 elements." << std::endl;
+        } else if(num == -1){            
+            std::cerr << "Not enough elements! You need to enter 5 elements." << std::endl;
         } else if (num == -2){
-            std::cout << "Completion of the program!" << std::endl;
+            std::cerr << "Completion of the program!" << std::endl;
         } else {
-            std::cout << "Incorrect data has been entered! Try again." << std::endl;
+            std::cerr << "Incorrect data has been entered! Try again." << std::endl;
         }
        
     } while(num != -2);
@@ -67,7 +67,7 @@ std::string CheckInputOfEmpty(std::string inTxt){
     getline(std::cin, result);
     
     if (result.empty()){
-      std::cout << "You forgot to enter the value! Try again." << std::endl;
+      std::cerr << "You forgot to enter the value! Try again." << std::endl;
     } 
   } while(result.empty()); 
   return result;
@@ -84,7 +84,7 @@ int InputNumber(std::string inTxt){
         if(ValidNum(resTxt)){
             res = std::stoi(resTxt);
         } else {            
-            std::cout << "Incorrect data has been entered! Try again." << std::endl;
+            std::cerr << "Incorrect data has been entered! Try again." << std::endl;
         }
 
     } while (!ValidNum(resTxt));
