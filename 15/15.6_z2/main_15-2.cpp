@@ -17,7 +17,7 @@ int main(){
     }
     
     if(ind_i == -1 || ind_k == -1) {
-        std::cout << std::endl << "No such elements were found!" << std::endl;
+        std::cerr << std::endl << "No such elements were found!" << std::endl << std::endl;
         system("pause");
         return -1;
     }
