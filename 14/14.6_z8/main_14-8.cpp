@@ -244,8 +244,6 @@ void InstallShips(nT (&inMatr)[rc][rc], int num, std::string inTxt){
             goriz = (column - 1) >= 0 && inMatr[row][column - 1] == 1;
             goriz |= (column + 1) <= 9 && inMatr[row][column + 1] == 1;
 
-            std::cout << "vert = " << vert << " gor = " << goriz << std::endl;
-
             if(vert || goriz){
                 inMatr[row][column] = 1;
                 point[cell - 1][0] = row;
@@ -264,8 +262,6 @@ void InstallShips(nT (&inMatr)[rc][rc], int num, std::string inTxt){
                 tmp = goriz && (column - 1) >= 0 && inMatr[row][column - 1] == 1;
                 tmp |= goriz && (column + 1) <= 9 && inMatr[row][column + 1] == 1;
             }
-
-            std::cout << "vert = " << vert << " gor = " << goriz << std::endl;
 
             if(tmp){
                 inMatr[row][column] = 1;
