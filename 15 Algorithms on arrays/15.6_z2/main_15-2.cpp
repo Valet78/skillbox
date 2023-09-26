@@ -14,6 +14,9 @@ int main(){
                 break;
             } 
         }
+        if(ind_i != -1 || ind_k != -1){
+            break;
+        }
     }
     
     if(ind_i == -1 || ind_k == -1) {
