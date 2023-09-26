@@ -2,10 +2,11 @@
 #include<iostream>
 #include<vector>
 
-bool ValidNum(std::string);                 // Проверка валидности ввода
+bool ValidNum(std::string);                // Проверка валидности ввода
 std::string CheckInputOfEmpty(std::string); // Проверка ввода строки и пустого ввода
 int InputNumber(std::string);               // Ввод числа
-void InsertVec(std::vector <int> &, int);   // Вставка элемента
+// std::vector<int> SortVec(std::vector <int>);   // Сортировка вектора, передача с созданием аналогичного вектора
+void SortVec(std::vector <int>&);   // Сортировка вектора, передача по ссылке
 void Print(std::vector <int>);              // Вывод вектора
 
 int main(){
@@ -20,14 +21,18 @@ int main(){
         num = InputNumber("Enter a value: ");
         
         if(num >= 0){
-            InsertVec(inVec, num);
-            Print(inVec);
-        } else if(num == -2){
-            std::cerr << "Completion of the program!" << std::endl;
-        } else if(num == -1 && inVec.size() < 5){            
-            std::cerr << "Not enough elements! You need to enter 5 elements." << std::endl;
+            inVec.push_back(num);
+
         } else if(num == -1 && inVec.size() >= 5){
+            // inVec = SortVec(inVec);
+            SortVec(inVec);
+            // Print(inVec);
             std::cout << "The fifth element: " << inVec[4] << std::endl;
+
+        } else if(num == -1){            
+            std::cerr << "Not enough elements! You need to enter 5 elements." << std::endl;
+        } else if (num == -2){
+            std::cerr << "Completion of the program!" << std::endl;
         } else {
             std::cerr << "Incorrect data has been entered! Try again." << std::endl;
         }
@@ -87,42 +92,39 @@ int InputNumber(std::string inTxt){
     return res;
 } 
 
-// Вставка элемента
-void InsertVec(std::vector <int> &vec, int insNum){
-    int ind = 0;
-    bool ins = false;
+// // Сортировка вектора, передача с созданием аналогичного вектора
+// std::vector<int> SortVec(std::vector <int> vec){
+    
+//     for(int i = 0; i < vec.size(); i++){
+//         for(int k = 0; k < vec.size() - i - 1; k++){
+//             if(vec[k] > vec[k + 1]) {
+//                 std::swap(vec[k], vec[k + 1]);
+//             }
+//         }
+//     }
+//     return vec;
+// }            
 
-    if(vec.size() == 0){
-        vec.push_back(insNum);
-    } else {
-        for(int i = 0; i < vec.size(); i++){
-            if(vec[i] > insNum){
-                ind = i;
-                ins = true;
-                break;
+// Сортировка вектора, передача по ссылке
+void SortVec(std::vector <int> &vec){
+    
+    for(int i = 0; i < vec.size(); i++){
+        for(int k = 0; k < vec.size() - i - 1; k++){
+            if(vec[k] > vec[k + 1]) {
+                std::swap(vec[k], vec[k + 1]);
             }
-        }
-        
-        if(ins){         
-            vec.push_back(vec.back());
-            for(int k = vec.size() - 1; k > ind; k--){
-                vec[k] = vec[k - 1];
-            }
-            vec[ind] = insNum;
-        } else {
-            vec.push_back(insNum);
         }
     }
-}         
+}            
 
 // Вывод вектора
-void Print(std::vector <int> vec){
-    std::cout << "vector => {" ;
-    for(int i = 0; i < vec.size(); i++){
-        std::cout << vec[i];
-        if(i != vec.size() - 1){
-            std::cout << ", "; 
-        }
-    }
-    std::cout << "}" << std::endl;
-}
+// void Print(std::vector <int> vec){
+//     std::cout << "vector => {" ;
+//     for(int i = 0; i < vec.size(); i++){
+//         std::cout << vec[i];
+//         if(i != vec.size() - 1){
+//             std::cout << ", "; 
+//         }
+//     }
+//     std::cout << "}" << std::endl;
+// }
