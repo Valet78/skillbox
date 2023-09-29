@@ -19,7 +19,9 @@ int main(){
             for(int k = ind; k < std::size(mass); k++){
                 if(abs(mass[k - 1]) >= abs(mass[k])){
                     std::swap(mass[k - 1], mass[k]);
-                }                 
+                } else {
+                    break;
+                }             
             } 
             ind = SeachPositive(mass);  
         }  
