@@ -1,35 +1,54 @@
 // Задание 15.6.4.Сортировка массива с возрсастанием по модулю
 
 #include<iostream>
+
 template<int rc, typename nT>
-void SortVec(nT (&)[rc]);   // Сортировка массива, передача по ссылке
+int SeachPositive(nT (&)[rc]);      // Поиск индекса положительного числа
 template<int rc, typename nT>
 void Print(nT (&)[rc]);              // Вывод массива
 
 
 int main(){
-    int mass[] {-100,-50, -5, 1, 10, 15};
+    int mass[] {-100, -50, -5, 1, 10, 15};
+    int indNeg = 0;
+    bool replace = false;
+    int indPoz = SeachPositive(mass);
+    int i = indPoz;
+    
+    if(indPoz > 0){
+        for(i; i > 0; i--){
+            for(int k = indPoz; k < std::size(mass); k++){
+                if(abs(mass[k - 1]) >= abs(mass[k])){
+                    std::swap(mass[k - 1], mass[k]);
+                }                 
+            } 
+            indPoz = SeachPositive(mass);  
+        }  
+    } else {
+        std::cout << std::endl << "The array consists of positive numbers and was previously sorted." << std::endl;
+    }
 
-    SortVec(mass);
-    Print(mass);    
+    // SortVec(mass);
+    Print(mass);   
 
+    system("pause");
     return 0;
 }
 
 // *******************
 
-// Сортировка массива, передача по ссылке
+// Поиск индекса положительного числа
 template<int rc, typename nT>
-void SortVec(nT (&inMass)[rc]){ 
+int SeachPositive(nT (&inMass)[rc]){
     
     for(int i = 0; i < std::size(inMass); i++){
-        for(int k = 0; k < std::size(inMass) - i - 1; k++){
-            if(abs(inMass[k]) > abs(inMass[k + 1])) {
-                std::swap(inMass[k], inMass[k + 1]);
-            }
+        if(inMass[i] > 0){
+            // std::cout << "ind = " << i << std::endl;
+            return i;
         }
-    }
-}            
+    }    
+    return 0;
+}      
 
 // Вывод массива
 template<int rc, typename nT>
