@@ -9,26 +9,24 @@ void Print(nT (&)[rc]);              // Вывод массива
 
 
 int main(){
-    int mass[] {-100, -50, -5, 1, 10, 15};
-    int indNeg = 0;
+    int mass[] {-100, -50, -5, 1, 10, 15};    
     bool replace = false;
-    int indPoz = SeachPositive(mass);
-    int i = indPoz;
+    int ind = SeachPositive(mass);
+    int i = ind;
     
-    if(indPoz > 0){
+    if(ind > 0){
         for(i; i > 0; i--){
-            for(int k = indPoz; k < std::size(mass); k++){
+            for(int k = ind; k < std::size(mass); k++){
                 if(abs(mass[k - 1]) >= abs(mass[k])){
                     std::swap(mass[k - 1], mass[k]);
                 }                 
             } 
-            indPoz = SeachPositive(mass);  
+            ind = SeachPositive(mass);  
         }  
     } else {
         std::cout << std::endl << "The array consists of positive numbers and was previously sorted." << std::endl;
     }
-
-    // SortVec(mass);
+    
     Print(mass);   
 
     system("pause");
