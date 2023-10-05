@@ -32,7 +32,7 @@ int main(){
         } else if(num == -2){
             std::cout << "The program completes its work. Good luck!" << std::endl;
         } else{
-            std::cout << "Incorrect data has been entered!" << std::endl;
+            std::cerr << "Incorrect data has been entered!" << std::endl;
         }
         
         // PrintMass(mass);
