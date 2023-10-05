@@ -4,32 +4,55 @@
 
 template<int rc, typename nT>
 int SeachPositive(nT (&)[rc]);      // Поиск индекса положительного числа
-template<int rc, typename nT>
-void Print(nT (&)[rc]);              // Вывод массива
-
 
 int main(){
-    int mass[] {-100, -50, -5, 1, 10, 15};    
-    bool replace = false;
-    int ind = SeachPositive(mass);
-    int i = ind;
-    
-    if(ind > 0){
-        for(i; i > 0; i--){
-            for(int k = ind; k < std::size(mass); k++){
-                if(abs(mass[k - 1]) >= abs(mass[k])){
-                    std::swap(mass[k - 1], mass[k]);
+    int mass[] {-100, -50, -5, 1, 10, 15};   
+        
+    int indPoz = SeachPositive(mass);
+    int indNeg = indPoz - 1, num = 0;
+
+    if(indPoz > 0){
+        std::cout << std::endl << "mass => {";
+        do{   
+            if(indPoz < std::size(mass)) {        
+                if(abs(mass[indNeg]) > abs(mass[indPoz])){
+                    std::cout << mass[indPoz];
+                    if(indPoz < std::size(mass)) {
+                        indPoz++;
+                        num++;
+                    }               
+                    
                 } else {
-                    break;
-                }             
+                    std::cout << mass[indNeg];
+                    if(indNeg > 0) {
+                        indNeg--;
+                        num++;
+                    }   
+                }  
+
+                if(indPoz <= std::size(mass)){
+                    std::cout << ", ";
+                } 
+
+            } else {
+                if(abs(mass[indNeg]) < abs(mass[indNeg - 1]) && indNeg > 0){
+                    std::cout << mass[indNeg] << ", ";
+                    if(indNeg > 0) {
+                        indNeg--;
+                        num++;
+                    }        
+                } else if(indNeg == 0){
+                    std::cout << mass[indNeg];
+                    num++;
+                }
             } 
-            ind = SeachPositive(mass);  
-        }  
+
+        } while (num < std::size(mass));
+        std::cout << "}" << std::endl;
+
     } else {
-        std::cout << std::endl << "The array consists of positive numbers and was previously sorted." << std::endl;
+        std::cerr << std::endl << "The array consists of positive numbers and was previously sorted." << std::endl;  
     }
-    
-    Print(mass);   
 
     system("pause");
     return 0;
@@ -42,7 +65,7 @@ template<int rc, typename nT>
 int SeachPositive(nT (&inMass)[rc]){
     
     for(int i = 0; i < std::size(inMass); i++){
-        if(inMass[i] > 0){
+        if(inMass[i] >= 0){
             // std::cout << "ind = " << i << std::endl;
             return i;
         }
