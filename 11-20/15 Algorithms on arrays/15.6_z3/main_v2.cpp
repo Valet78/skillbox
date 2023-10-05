@@ -1,17 +1,16 @@
 // Задание 15.6.3.Ввод чисел в массив и вывод заданного элемента
 #include<iostream>
+#include<vector>
 
 bool ValidNum(std::string);                 // Проверка валидности ввода
 std::string CheckInputOfEmpty(std::string); // Проверка ввода строки и пустого ввода
 int InputNumber(std::string);               // Ввод числа
-template<int rc, typename nT>
-void InsertValue(nT (&)[rc], int);            // Вставка элемента
-template<int rc, typename nT>
-void PrintMass(nT (&)[rc]);              // Вывод массива
+void InsertVec(std::vector <int> &, int);   // Вставка элемента
+void Print(std::vector <int>);              // Вывод вектора
 
 int main(){
-    int mass[5] {2147483647, 2147483647, 2147483647, 2147483647, 2147483647}; 
-    int num = 0, inNum = 1;
+    std::vector<int> inVec; 
+    int num = 0;
 
     std::cout << std::endl;
     std::cout << "Enter the sequence elements. To output the fifth ascending element, enter \"-1\"." << std::endl;
@@ -21,23 +20,19 @@ int main(){
         num = InputNumber("Enter a value: ");
         
         if(num >= 0){
-            if(num < mass[4]){
-                InsertValue(mass, num);
-                inNum++;
-            }
-        } else if(num == -1 && inNum > 5){
-            std::cout << "The fifth element in the array: " << mass[4] << std::endl;
-        } else if(num == -1){
-            std::cout << "There are fewer than five elements in the array!" << std::endl;
+            InsertVec(inVec, num);
+            Print(inVec);
         } else if(num == -2){
-            std::cout << "The program completes its work. Good luck!" << std::endl;
-        } else{
-            std::cout << "Incorrect data has been entered!" << std::endl;
+            std::cerr << "Completion of the program!" << std::endl;
+        } else if(num == -1 && inVec.size() < 5){            
+            std::cerr << "Not enough elements! You need to enter 5 elements." << std::endl;
+        } else if(num == -1 && inVec.size() >= 5){
+            std::cout << "The fifth element: " << inVec[4] << std::endl;
+        } else {
+            std::cerr << "Incorrect data has been entered! Try again." << std::endl;
         }
-        
-        // PrintMass(mass);
+       
     } while(num != -2);
-
     system("pause");
     return 0;
 }
@@ -93,34 +88,39 @@ int InputNumber(std::string inTxt){
 } 
 
 // Вставка элемента
-template<int rc, typename nT>
-void InsertValue(nT (&inMass)[rc], int insNum){
+void InsertVec(std::vector <int> &vec, int insNum){
     int ind = 0;
+    bool ins = false;
 
-    for(int i = 0; i < 5; i++){
-        if(insNum < inMass[i]){
-            ind = i;
-            break;
+    if(vec.size() == 0){
+        vec.push_back(insNum);
+    } else {
+        for(int i = 0; i < vec.size(); i++){
+            if(vec[i] > insNum){
+                ind = i;
+                ins = true;
+                break;
+            }
+        }
+        
+        if(ins){         
+            vec.push_back(vec.back());
+            for(int k = vec.size() - 1; k > ind; k--){
+                vec[k] = vec[k - 1];
+            }
+            vec[ind] = insNum;
+        } else {
+            vec.push_back(insNum);
         }
     }
-    
-    if(ind < 4){
-        for(int i = 4; i >= ind; i--){
-            inMass[i] = inMass[i - 1];
-        }
-    }
-    
-    inMass[ind] = insNum;    
-    
 }         
 
-// Вывод массива
-template<int rc, typename nT>
-void PrintMass(nT (&inMass)[rc]){
-    std::cout << "mass => {" ;
-    for(int i = 0; i < std::size(inMass); i++){
-        std::cout << inMass[i];
-        if(i != std::size(inMass) - 1){
+// Вывод вектора
+void Print(std::vector <int> vec){
+    std::cout << "vector => {" ;
+    for(int i = 0; i < vec.size(); i++){
+        std::cout << vec[i];
+        if(i != vec.size() - 1){
             std::cout << ", "; 
         }
     }
