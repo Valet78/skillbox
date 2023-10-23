@@ -9,7 +9,7 @@ float InputNumberFloat(std::string);               // Ввод числа
 bool compare(float, float, float);           // Сравнение чисел с учётом отклонения
 
 int main(){
-    float speed = 0.0f, delta = 0.0f, rate = 0.01f;
+    float speed = 0.00f, delta = 0.00f, rate = 0.01f;
     std::cout << std::endl << "The program \"Speedometer\"." << std::endl << std::endl; 
     char speedTxt[5];
 
@@ -17,16 +17,18 @@ int main(){
         delta = InputNumberFloat("Speed delta: ");
         speed += delta;        
 
-        if((speed > 150.0f) || (150 - speed < rate)){
+        if((speed > 150.00f) || (abs(150 - speed) < rate)){
             std::cout << "The car's speed has reached the maximum limit of 150 km/h." << std::endl;
+            speed -= delta;
         } else if((speed < 0) || speed < rate){
             std::cout << "The car stopped." << std::endl;
+            speed = 0.00f;
         } else {
-            sprintf(speedTxt, "%.4f", speed);
+            sprintf(speedTxt, "%.2f", speed);
             std::cout << "Speed: " << speedTxt << std::endl;
         }
 
-    } while(speed > 0.0f);
+    } while(speed > 0.00f);
 
     return 0;
 }
