@@ -17,14 +17,16 @@ int main(){
         delta = InputNumberFloat("Speed delta: ");
         speed += delta;        
 
-        if((speed > 150.00f) || (abs(150 - speed) < rate)){
+        if(compare(speed, 150.00f, 0.01f) || (speed > 150.00f)){    
             std::cout << "The car's speed has reached the maximum limit of 150 km/h." << std::endl;
             speed -= delta;
-        } else if((speed < 0) || speed < rate){
+        
+        } else if(compare(speed, 0.00f, 0.01f) || (speed < 0)){    
             std::cout << "The car stopped." << std::endl;
             speed = 0.00f;
+            
         } else {
-            sprintf(speedTxt, "%.2f", speed);
+            sprintf(speedTxt, "%.1f", speed);
             std::cout << "Speed: " << speedTxt << std::endl;
         }
 
