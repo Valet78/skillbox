@@ -1,7 +1,6 @@
 // Задание 16.6.2. Сшиватель дробных чисел
 
 # include<iostream>
-// # include<limits>
 
 bool ValidNum(std::string, std::string);                 // Проверка валидности ввода
 std::string CheckInputOfEmpty(std::string); // Проверка ввода строки и пустого ввода
@@ -12,7 +11,7 @@ int main(){
     std::string wholePart = InputNumber("Enter the whole part: ", "whole");
     std::string fractPart = InputNumber("Specify the fractional part: ", "fract");
     double inputNum = std::stod(wholePart + "." + fractPart);
-    
+
     std::cout << "---------------------------------" << std::endl;
     std::cout << "Input number: " << std::to_string(inputNum) << std::endl;
 
