@@ -2,27 +2,30 @@
 
 # include<iostream>
 
+enum note {DO = 1, RE = 2, MI = 4, FA = 8, SOL = 16, LA = 32, SI = 64};
 bool ValidNum(std::string, std::string);    // Проверка валидности ввода
 std::string CheckInputOfEmpty(std::string); // Проверка ввода строки и пустого ввода
 std::string InputNumber(std::string);       // Ввод числа (возвращает строку)
-std::string GetNotes(std::string);          // Получение ноты из строки цифр
+int GetNotes(std::string);                  // Получение ноты из строки цифр
+template<int col>
+void PrintNotes(int (&)[col]);              //Вывод на экран аккордов
 
 int main(){
-    std::string resNotes = "";
-
-    enum note {DO = 1, RE = 2, MI = 4, FA = 8, SOL = 16, LA = 32, SI = 64};
+    int melody[12] = {0};    
+    std::string combNotes = "";
 
     std::cout << std::endl << "The program \"Mechanical Piano\"." << std::endl;
     std::cout << "Specify twelve combinations of notes from natural numbers (1..7)," << std::endl;
     std::cout << "where \"1\" is \"do\" and \"7\" is \"si\"." <<std::endl;
 
     for(int i = 0; i < 12; i++){
-        std::string combNotes = InputNumber(std::to_string(i + 1) + " combination of notes: ");
-        resNotes.append(GetNotes(combNotes));       
+        combNotes = InputNumber(std::to_string(i + 1) + " combination of notes: ");
+        melody[i] = GetNotes(combNotes);       
     }
     
     std::cout << "---------------------------------" << std::endl;
-    std::cout << resNotes << std::endl << std::endl;  
+    PrintNotes(melody);
+    std::cout << std::endl;    
     
     return 0;
 }
@@ -71,39 +74,46 @@ std::string InputNumber(std::string inTxt){
 } 
 
 // Получение ноты из строки цифр
-std::string GetNotes(std::string inTxt){
-    std::string res = "", tmp = "";    
+int GetNotes(std::string inTxt){
     int ind = 0;
-    enum note {DO = 1, RE = 2, MI = 4, FA = 8, SOL = 16, LA = 32, SI = 64};
-
+    
     for(int i = 0; i < inTxt.length(); i++){
-        ind = 1 << (int) (inTxt[i] - '0') - 1;
-        
-        switch (ind)
-        {
-        case note::DO:
+        ind |= 1 << (int) (inTxt[i] - '0');
+    }
+    std::cout << "\t ind = " << ind << std::endl;
+    return ind;
+}
+
+//Вывод на экран аккордов
+template<int col>
+void PrintNotes(int (&inNum)[col]){
+    std::string res = "";    
+   
+    for(int i = 0; i < 12; i++){  
+
+        if(inNum[i] & DO){
             res += "DO ";
-            break;
-        case note::RE:
+        } 
+        if(inNum[i] & RE){
             res += "RE ";
-            break;
-        case note::MI:
+        }
+        if(inNum[i] & MI){
             res += "MI ";
-            break;    
-        case note::FA:
+        }
+        if(inNum[i] & FA){
             res += "FA ";
-            break;    
-        case note::SOL:
+        }
+        if(inNum[i] & SOL){
             res += "SOL ";
-            break; 
-        case note::LA:
+        }
+        if(inNum[i] & LA){
             res += "LA ";
-            break; 
-        case note::SI:
+        }
+        if(inNum[i] & SI){
             res += "SI ";
-            break;          
-        }        
+        }
+        
     }
     
-    return res;
+    std::cout << res << std::endl;
 }    
