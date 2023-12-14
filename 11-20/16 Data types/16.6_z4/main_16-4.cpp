@@ -78,9 +78,9 @@ int GetNotes(std::string inTxt){
     int ind = 0;
     
     for(int i = 0; i < inTxt.length(); i++){
-        ind |= 1 << (int) (inTxt[i] - '0');
+        ind |= 1 << (int) (inTxt[i] - '0' - 1);
     }
-    std::cout << "\t ind = " << ind << std::endl;
+    
     return ind;
 }
 
