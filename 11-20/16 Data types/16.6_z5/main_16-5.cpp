@@ -107,13 +107,13 @@ bool ParseText (std::string inTxt, std::string (&inPars)[col]){
         inPars[i] = (ind != std::string::npos) ? inTxt.substr(0, ind): inTxt;  
         
         if(i == 0 || i == 1) {
-            res *= ValidNum(inPars[i]);
+            res &= ValidNum(inPars[i]);
         } else if (i == 2 && (inPars[i] == "yes" || inPars[i] == "no")) {
-            res *= true;
+            res &= true;
         } else if (i == 3 && (inPars[i] == "on" || inPars[i] == "off")) {
-            res *= true;
+            res &= true;
         } else {
-            res *= false;
+            res &= false;
         }     
 
         inTxt.erase(0, ++ind);
