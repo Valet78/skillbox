@@ -20,14 +20,12 @@ void StateHeaters (int, int &);                         // Статус обог
 void StatePipHeating (int, int &);                      // Статус обогревателя водопровода
 void StateConditioner (int, int &);                     // Статус работы кондиционера
 int TempLightIn (int, bool);                            // Установка температуры освещения
-template<int col>
-void StatePrint (int (&)[col], int, int, int);          // Вывод статистики 
 
 int main(){
     
     std::string inText = "";
     std::string parse[4];      
-    int switchStat[5] = {0};
+    int switchStat = 0;
     int dayNow = 0, timeNow = 0, tempIn = 0, tempOut = 0, lightTemp = 5700;
 
     std::cout << "A \"Smart Home\" simulation program." << std::endl;
@@ -44,15 +42,15 @@ int main(){
             tempIn = std::stoi(parse[0]);   // температура воздуха внутри дома
             tempOut = std::stoi(parse[1]);  // температура воздуха вне дома
             std::cout << std::endl;
-            
-            StateLightIns (parse[3], timeNow, switchStat[0]);  // Статус освещения внутри
-            StateLightOut (parse[2], timeNow, switchStat[1]);  // Статус освещение снаружи
-            StateHeaters (tempIn, switchStat[2]);              // Статус обогревателя
-            StatePipHeating (tempOut, switchStat[3]);          // Статус обогревателя водопровода
-            StateConditioner (tempIn, switchStat[4]);          // Статус работы кондиционера
 
-            // StatePrint(switchStat, dayNow, timeNow, lightTemp);
+
             
+            StateLightIns (parse[3], timeNow, switchStat);  // Статус освещения внутри
+            StateLightOut (parse[2], timeNow, switchStat);  // Статус освещение снаружи
+            StateHeaters (tempIn, switchStat);              // Статус обогревателя
+            StatePipHeating (tempOut, switchStat);          // Статус обогревателя водопровода
+            StateConditioner (tempIn, switchStat);          // Статус работы кондиционера
+                        
         } else {
             std::cout << std::endl << "Incorrect data has been entered! Try again." << std::endl << std::endl;
             i--;
@@ -131,104 +129,77 @@ int TempLightIn(int inTime, bool inState){
     return (inState) ? tmp : 5000;
 }
 
-// Вывод статистики 
-template<int col>
-void StatePrint (int (&inState)[col], int day, int time, int lightTemp){
-    
-    std::string col_1 = std::to_string(day);
-    std::string col_2 = (time < 10) ? "0" + std::to_string(time) : std::to_string(time);
-
-
-    std::cout << std::endl;
-    std::cout << "*** Device status for " << day << " day, " << time << ":00 hours *************" << std::endl;
-    std::cout << "*                                                   *" << std::endl;
-    
-    col_1 = (inState[0] != 0) ? "ON!" : "OFF!";
-    col_2 = (inState[0] != 0) ? std::to_string(lightTemp) + "K": " --  ";
-    std::cout << "*  Lights inside " << col_1 << "\t Color temperature: " << col_2 << "   *" << std::endl;
-    std::cout << "*                                                   *" << std::endl;
-    
-    col_1 = (inState[1] != 0) ? "ON! " : "OFF!";
-    col_2 = (inState[3] != 0) ? "ON! " : "OFF!";
-    std::cout << "*  Lights outside " << col_1 << "\t WATER PIPE HEATING " << col_2 << "    *" << std::endl;
-    std::cout << "*                                                   *" << std::endl;
-
-    col_1 = (inState[2] != 0) ? "ON! " : "OFF!";
-    col_2 = (inState[4] != 0) ? "ON! " : "OFF!";
-    std::cout << "*  HEATERS " << col_1 << "\t\t CONDITIONER  " << col_2 << "          *" << std::endl;
-    std::cout << "*                                                   *" << std::endl;
-    std::cout << "*****************************************************" << std::endl;
-    std::cout << std::endl;
-}       
-
 // Статус освещения внутри
-void StateLightIns (std::string inTxt, int inTime, int & inState){    
+void StateLightIns (std::string inTxt, int inTime, int &inState){    
     int lightTemp = TempLightIn(inTime, inState);    // Установка температуры освещения
 
-    if(inState == 0 && inTxt == "on"){
+    if(!(inState & LIGHTS_INSIDE) && inTxt == "on"){
         inState |= LIGHTS_INSIDE;     // включить 
-        std::cout << "Lights inside ON!" << std::endl << std::endl; 
-        std::cout << "Color temperature: " << lightTemp << "K" << std::endl << std::endl;               
+        std::cout << "Lights inside ON!" << std::endl << std::endl;                    
         
-    } else if(inState != 0){
-        std::cout << "Color temperature: " << lightTemp << "K" << std::endl << std::endl;
-
+    } else if((inState & LIGHTS_INSIDE) && inTxt == "off"){
+        
         if(inTxt == "off"){
             inState &= ~LIGHTS_INSIDE;    // выключить
             std::cout << "Lights inside OFF!" << std::endl << std::endl;
-        } 
+        }         
+    }    
+
+    if(inState & LIGHTS_INSIDE){
+        std::cout << "Color temperature: " << lightTemp << "K" << std::endl << std::endl;
     } 
+
 }                      
 
 // Статус освещение снаружи
-void StateLightOut (std::string inTxt, int inTime, int & inState){
-
+void StateLightOut (std::string inTxt, int inTime, int &inState){
+   
     if(!(inTime > 5 && inTime < 16)){
-        if(inState == 0 && inTxt == "yes"){
+        if(!(inState & LIGHTS_OUTSIDE) && inTxt == "yes"){
             inState |= LIGHTS_OUTSIDE;    // включить
             std::cout << "Lights outside ON!" << std::endl << std::endl;
         
-        } else if(inState != 0 && inTxt == "no"){
+        } else if((inState & LIGHTS_OUTSIDE) && inTxt == "no"){
             inState &= ~LIGHTS_OUTSIDE;    // выключить
             std::cout << "Lights outside OFF!" << std::endl << std::endl;
         } 
-    } else if(inState != 0){
+    } else if(inState & LIGHTS_OUTSIDE){
         inState &= ~LIGHTS_OUTSIDE;    // выключить
         std::cout << "Lights outside OFF!" << std::endl << std::endl;
     }  
 }          
 
 // Статус обогревателя
-void StateHeaters (int inTemp, int & inState){
+void StateHeaters (int inTemp, int &inState){
     
-    if(inState == 0 && inTemp < 22){
+    if(!(inState & HEATERS) && inTemp < 22){
         inState |= HEATERS;    // включить
         std::cout << "Heaters ON!" << std::endl << std::endl;
-    } else if (inState != 0 && inTemp >= 25){
+    } else if ((inState & HEATERS) && inTemp >= 25){
         inState &= ~HEATERS;    // выключить
         std::cout << "Heaters OFF!" << std::endl << std::endl;
     }
 }                           
 
 // Статус обогревателя водопровода
-void StatePipHeating(int inTemp, int & inState){
+void StatePipHeating(int inTemp, int &inState){
 
-    if(inState == 0 && inTemp < 0){
+    if(!(inState & WATER_PIPE_HEATING) && inTemp < 0){
         inState |= WATER_PIPE_HEATING;    // включить
         std::cout << "Water pipe heating ON!" << std::endl << std::endl;
-    } else if (inState != 0 && inTemp > 5){
+    } else if ((inState & WATER_PIPE_HEATING) && inTemp > 5){
         inState &= ~WATER_PIPE_HEATING;    // выключить
         std::cout << "Water pipe heating OFF!" << std::endl << std::endl;
     }
 }
 
 // Статус работы кондиционера
-void StateConditioner(int inTemp, int & inState){
+void StateConditioner(int inTemp, int &inState){
     
-    if(inState == 0 && inTemp >= 30){
+    if(!(inState & CONDITIONER) && inTemp >= 30){
         inState |= CONDITIONER;           // включить
         std::cout << "Conditioner ON!" << std::endl << std::endl;
-    } else if (inState != 0 && inTemp < 25){
+    } else if ((inState & CONDITIONER) && inTemp < 25){
         inState &= ~CONDITIONER;         // выключить
         std::cout << "Conditioner OFF!" << std::endl << std::endl;
     }
