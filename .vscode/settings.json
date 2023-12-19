@@ -52,7 +52,8 @@
         "iomanip": "cpp",
         "sstream": "cpp",
         "main_14-7": "cpp",
-        "cstring": "cpp"
+        "cstring": "cpp",
+        "fstream": "cpp"
     },
     "files.encoding": "utf8",
     "terminal.integrated.detectLocale": "on"
