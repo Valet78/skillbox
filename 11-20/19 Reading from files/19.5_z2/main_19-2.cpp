@@ -72,6 +72,8 @@ void readFile(std::vector<std::vector<std::string>> &inVec, const std::string &i
         getline(fileData,tmpTxt);
         tmpVec.push_back(tmpTxt);
         inVec.push_back(tmpVec);
+        tmpTxt = "";
+        tmpVec.clear();
     }
 
     fileData.close();
@@ -79,12 +81,15 @@ void readFile(std::vector<std::vector<std::string>> &inVec, const std::string &i
 
 // Печать вектора
 void printVec(std::vector<std::vector<std::string>> const &inVec) {
-    
-    for (std::vector<std::vector<std::string>> row: inVec)
-    {
-        for (std::vector<std::string> val: row) {
-            std::cout << val << "\n";
+    std::cout << std::endl << "******* This text from file *********" << std::endl << std::endl;
+
+    for (auto rv = inVec.begin(); rv != inVec.end(); rv++) {
+
+        for (const auto &col: *rv) {
+            std::cout << col;
         }
         std::cout << std::endl;
     }
+                
+    std::cout << std::endl << "*************************************" << std::endl;
 } 
