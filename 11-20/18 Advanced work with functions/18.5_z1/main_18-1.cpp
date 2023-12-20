@@ -3,7 +3,7 @@
 #include<iostream>
 #include<vector>
 
-std::vector<int> swapVec(std::vector<int>, int*);
+std::vector<int> swapVec(std::vector<int> &, int*);
 template<typename T>
 void print(T);
 
@@ -21,7 +21,7 @@ int main() {
     return 0;
 }
 
-std::vector<int> swapVec(std::vector<int> inA, int* inB) {
+std::vector<int> swapVec(std::vector<int> &inA, int* inB) {
     int temp = 0;
 
     for(int i = 0; i < 4; i++) {
