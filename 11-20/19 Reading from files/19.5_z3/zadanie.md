@@ -31,7 +31,7 @@ John Randall 23400 2.10.2020
 
 Sam Anderson 6500 15.7.2020
 
-Margo Moorer 12350 24.2.2019ш
+Margo Moorer 12350 24.2.2019
 ```
 `Что оценивается`
 
