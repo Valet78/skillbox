@@ -3,29 +3,62 @@
 #include<iostream>
 #include<fstream>
 #include<vector>
+#include<filesystem>
 
+std::string getPath(std::string);   // Получение полного пути (с преобразованием) к папке с файлами
 std::string inText(std::string);    // Ввод искомого текста, слова
-void readFile(std::vector<std::string> &, const std::string &);    // Заполнение ветора из файла
-void printVec(std::vector<std::string> &);        // Вывод вектора данных
-int searchText(const std::vector<std::string> &, const std::string);    // Поиск слова 
 
-int main() {
-    std::vector<std::string> vecFromFile;
-    std::string fileName = "L:\\Users\\Fantik\\YandexDisk\\Project C++\\Skiilbox\\11-20\\19 Reading from files\\19.5_z1\\words.txt";
+int main(int argc, char* argv[]) {
+    std::string pathFull = getPath(argv[0]) + "words.txt";       // Полный путь к исполняемому файлу
+    std::string txt = "";
+    int count = 0;
 
+    std::ifstream file(pathFull, std::ios::binary);
+
+    if (!file.is_open()) {
+        std::cerr << "The file was not found! The program will be closed." << std::endl;
+        file.close();
+        system("pause");
+        return -1;
+    }    
+   
     std::string searchWord = inText("Enter the meaning of the word you are looking for: "); 
     std::cout << std::endl;
-    readFile(vecFromFile, fileName);
-    
-    // std::cout << "Data from the file: "; 
-    // printVec(vecFromFile);
 
-    std::cout << "The required text \"" << searchWord << "\" occurs " << searchText(vecFromFile, searchWord) << 
-        " times in the file." << std::endl; 
-    
+    while (!file.eof()) {        
+        file >> txt;
+
+        if (txt == searchWord) {
+            count++;
+        }
+    } 
+
+    std::cout << "The required text \"" << searchWord << "\" occurs " << count << 
+        " times in the file." << std::endl << std::endl; 
+
+    file.close();
+    system("pause");
     return 0;
 }
 // *************************
+
+// Получение полного пути (с преобразованием) к папке с файлами  
+std::string getPath(std::string inTxt) {
+    std::string resTxt = "";
+    int ind = inTxt.find_last_of((char) 92) + 1;
+    inTxt = inTxt.substr(0, ind);
+
+    for(int i = 0; i < inTxt.size(); i++) {
+            if(inTxt[i] == (char)92) {
+                resTxt.push_back((char)92);
+                resTxt.push_back((char)92);           
+            } else {
+                resTxt.push_back(inTxt[i]);
+            }
+        }
+
+    return resTxt;
+}
 
 // Ввод искомого текста, слова
 std::string inText(std::string inTxt) {
@@ -33,7 +66,7 @@ std::string inText(std::string inTxt) {
 
     do {
         std::cout << std::endl << inTxt;
-        getline(std::cin, resTxt);
+        std::getline(std::cin, resTxt);
 
         if(resTxt.empty()) {
             std::cout << std::endl << "You forgot to enter the value! Try again." <<  std::endl;
@@ -43,40 +76,3 @@ std::string inText(std::string inTxt) {
     return resTxt;
 }
 
-// Заполнение ветора из файла
-void readFile(std::vector<std::string> &inVec, const std::string &nameFile) {
-    std::string tempTxt = "";
-    std::ifstream words;
-    words.open(nameFile); //, std::ios::binary);
-
-    while(!words.eof()) {
-        words >> tempTxt;
-        inVec.push_back(tempTxt);
-    }
-
-    words.close();
-} 
-
-// Вывод вектора данных
-void printVec(std::vector<std::string> &inVec) {
-    std::cout << " {";
-
-    for(int i = 0; i < inVec.size(); i++) {
-        std::cout << inVec[i];
-
-        if(i < inVec.size() - 1){
-            std::cout << ", ";
-        }
-    }
-    std::cout << "}" << std::endl << std::endl;
-}
-
-// Поиск слова
-int searchText(const std::vector<std::string> &inVec, const std::string schTxt) {
-    int count = 0;
-
-    for(int i = 0; i < inVec.size(); i++) {
-        count += (inVec[i] == schTxt) ? 1 : 0; 
-    }
-    return count;
-}    
