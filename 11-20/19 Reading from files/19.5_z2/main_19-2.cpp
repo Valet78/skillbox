@@ -45,7 +45,7 @@ int main () {
     }
 
     std::cout << std::endl << std::endl << "*************************************" << std::endl;
-
+    file.close();
     system("pause");
     return 0;
 }
