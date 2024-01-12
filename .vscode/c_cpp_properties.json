@@ -3,8 +3,9 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${env:userHome}/msys64/mingw64/include/**"
+                "${workspaceFolder}\\**",
+                "${env:SystemDrive}\\msys64\\mingw64\\include\\**",
+                "${env:SystemDrive}\\"
             ],
             "defines": [
                 "_DEBUG",
@@ -12,7 +13,7 @@
                 "_UNICODE"
             ],
             "windowsSdkVersion": "8.1",
-            "compilerPath": "${env:userHome}\\msys64\\mingw64\\bin\\g++.exe",
+            "compilerPath": "${env:SystemDrive}\\msys64\\mingw64\\bin\\g++.exe",
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "gcc-x86"

@@ -1,6 +1,7 @@
 File handling is used to store data permanently in a computer. Using file handling we can store our data in secondary memory (Hard disk).
 How to achieve the File Handling
-For achieving file handling we need to follow the following steps:-
+
+For achieving file handling we need to follow the following steps:
  STEP 1-Naming a file
  STEP 2-Opening a file
  STEP 3-Writing data into the file
@@ -18,4 +19,4 @@ The input and output operation between the executing program and files are known
 Classes for File stream operations :
 The I/O system of C++ contains a set of classes which define the file handling methods. These include ifstream, ofstream and fstream classes. 
 These classes are derived from fstream and from the corresponding iostream class. These classes, designed to manage the disk files, are declared
-in fstream and therefore we must include this file in any program that uses files.
+in fstream and therefore we must include this file in any program that uses files. 
