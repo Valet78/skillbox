@@ -3,69 +3,105 @@
 #include<iostream>
 #include<fstream>
 
-enum sector {
-    FIRST = 1, SECOND = 2, THIRD = 4, FOURTH = 8,
-    FIFTH = 16, SIXTH = 32, SEVENTH = 64, EIGHTH = 128,
-    NINTH = 256,  TENTH = 512, ELEVENTH = 1024, TWELFTH = 2048,
-    THIRTEENTH = 4096
-};
-
-std::string getCurrPath(std::string);           // Получение текущего адреса директории
+std::string getCurrPath(std::string);               // Получение текущего адреса директории
 bool fileExist(const std::string &, const std::string &);  // Проверка наличия файла
-bool validDigit(std::string);                   // Проверка правильности ввода числа
-int selectSector(int, std::string, int &);     // Выбор сектора
-std::string serchText(const std::string, int);    // Поиск текста в файле
+bool validDigit(std::string);                       // Проверка правильности ввода числа
+int selectSector(int, std::string);                 // Выбор сектора
+std::string serchText(const std::string, int);      // Поиск текста в файле
+bool outOffGame[13] {false};                        // Статус секторов
 
+int main(int argc, char* argv[]) {
+    std::string ansTxt = "", questTxt = "", ansExpert = ""; 
+    // С указанием полного адреса
+    // const std::string currentPath = getCurrPath(argv[0]);    
+    // std::ifstream file_1(currentPath + "answers.txt"), file_2 (currentPath + "questions.txt"); 
+    
+    // Относительная адресация    
+    std::ifstream file_1("answers.txt"), file_2 ("questions.txt"); 
+    
+    bool valid = file_1.is_open() & file_2.is_open();
+    file_1.close();
+    file_2.close();         
+    setlocale(LC_ALL, "ru_RU.utf8");
+    
 
-int main() {    
-    const std::string currentPath = getCurrPath(__FILE__);
-    std::string ansTxt = "", questTxt = "";
-    bool valid = fileExist(currentPath, "answers.txt") & fileExist(currentPath, "questions.txt");
-    int scoreAudience = 0, scorePlayers = 0;
-    int curSec = 0, stateSec = 8191, round = 1;
-
-
+    // Если файлы отсутсвуют или их невозможно открыть
     if(!valid){
-        std::cout << std::endl << "Two files are required for the program to work: answers.txt and questions.txt" << std::endl;
-        std::cout << "The specified files were not found or were read with an error! The program will be closed." << std::endl << std::endl;
+        std::cerr << std::endl << "Two files are required for the program to work: answers.txt and questions.txt" << std::endl;
+        std::cerr << "The specified files were not found or were read with an error! The program will be closed." << std::endl << std::endl;
+        system("pause");
         return -1;
-    } 
-
+        } 
+    
+    int scoreAudience = 0, scorePlayers = 0;
+    int curSec = 0, round = 1;
+    
     std::cout << std::endl << "The program of the game \"What? Where? When?\"" << std::endl << std::endl; 
 
     do {
+        system("cls");
         std::cout << std::endl << "***** Round " << round << " *****" << std::endl;
         std::cout << "Score (players/spectators): " << scorePlayers << " / " << scoreAudience << std::endl;
 
-        curSec = selectSector(curSec, "How many sectors should the top turn? ", stateSec);
+        curSec = selectSector(curSec, "How many sectors should the top turn? ");
         std::cout << "Sector " << std::to_string(curSec + 1) << std::endl;
+
+        // std::cout << "Status = { ";
+        // for (bool itn : outOffGame) {
+        //     std::cout << std::boolalpha << itn << " ";
+        // }
+        // std::cout << "}" << std::endl << std::endl;
         
-        questTxt = serchText(currentPath + "questions.txt", curSec + 1);
-        std::cout << "Question: "  << questTxt;
+        // questTxt = serchText(currentPath + "questions.txt", curSec + 1);
+        questTxt = serchText("questions.txt", curSec + 1);
 
-        system("pause");
+        if (questTxt == "Error! The file cannot be opened.") {
+            std::cout << std::endl << questTxt  << " The program will be closed." << std::endl;
+            return -1;
+        }
+        
+        std::cout << "Question: " << questTxt;       
+        // ansTxt = serchText(currentPath + "answers.txt", curSec + 1);
+        ansTxt = serchText("answers.txt", curSec + 1);
+        
+        if (ansTxt == "Error! The file cannot be opened.") {
+            std::cerr << std::endl << ansTxt  << " The program will be closed." << std::endl;
+            return -1;
+        }
 
-        ansTxt = serchText(currentPath + "answers.txt", curSec + 1);
-        std::cout << std::endl << "Right answer: " << ansTxt;
+        // std::cout << std::endl << "Right answer: " << ansTxt <<std::endl;
 
         do {
-            std::cout << "Should I count the answer (yes/no)? ";
-            std::getline (std::cin, ansTxt);
+            std::cout << "Your answer, experts: ";
+            std::getline (std::cin, ansExpert);            
+            ansTxt.pop_back();              // Это для среды Windows удаляем \r\n
+            ansTxt.pop_back();
+            if (ansExpert.empty()) {
+                std::cerr << "You forgot to enter the answer! Try again." << std::endl;
+            }
+            
+            if (ansTxt == ansExpert) {
+                scorePlayers++; 
 
-            if (ansTxt == "yes") {
-                scorePlayers++;
-            } else if (ansTxt =="no") {
+            } else if (ansTxt != ansExpert) {
                 scoreAudience++;
+                
             } else {
                 std::cout << "Incorrect data has been entered. Try again." << std::endl;
-            }
-
-        } while (!(ansTxt == "yes" || ansTxt =="no"));
+            }            
+            
+        } while (ansExpert.empty());
         
         round++;
-    } while(scoreAudience != 6 && scorePlayers != 6 && round < 12);
 
+    } while((scoreAudience != 6 || scorePlayers != 6) || (scoreAudience + scorePlayers) < 12);
 
+    if (scorePlayers > scoreAudience) {
+        std::cout << "The winner of the game was the audience!" << std::endl;
+    } else {
+        std::cout << "The experts became the winner of the game!" << std::endl;
+    }
+    
     system("pause");
     return 0;
 }
@@ -79,14 +115,14 @@ std::string getCurrPath(std::string inTxt) {
     inTxt = inTxt.substr(0, ind);
 
     for(int i = 0; i < inTxt.size(); i++) {
-            if(inTxt[i] == (char)92) {
-                resTxt.push_back((char)92);
-                resTxt.push_back((char)92);           
-            } else {
-                resTxt.push_back(inTxt[i]);
-            }
+        if(inTxt[i] == (char)92) {
+            resTxt.push_back((char)92);
+            resTxt.push_back((char)92);           
+        } else {
+            resTxt.push_back(inTxt[i]);
         }
-
+    }
+    
     return resTxt;
 }
 
@@ -102,154 +138,33 @@ bool fileExist(const std::string &inPath, const std::string &inName) {
 }
 
 // Выбор сектора
-int selectSector(int inCurSec, std::string inTxt, int &stateSector) {
+int selectSector(int inCurSec, std::string inTxt) {
     std::string numSecTxt = "";
     bool valid = true;
     
     do {
         std::cout << std::endl << inTxt;
         std::getline(std::cin, numSecTxt);
-        
+        valid = true;
+
         if(numSecTxt.empty()) {
             valid &= false;
-            std::cout << "You forgot to specify the number! Try again." << std::endl; 
+            std::cerr << "You forgot to specify the number! Try again." << std::endl; 
         
         } else if(!validDigit(numSecTxt)){
             valid &= false;
-            std::cout << "Incorrect data has been entered! Try again." << std::endl; 
+            std::cerr << "Incorrect data has been entered! Try again." << std::endl; 
         } 
 
     } while (!valid);
     
     int numSec = (std::stoi(numSecTxt) % 13 + inCurSec) % 13;
-    int ind = 0;
 
-    do {
-        valid = true;
-        ind = (1 << numSec);
-        
-        switch (ind) {
-            case FIRST:
-                if(!(stateSector & FIRST)) {
-                    numSec = (numSec + 1) % 13;
-                    valid &= false;
-                } else {
-                    stateSector &= ~FIRST;
-                }
-                break;
-            
-            case SECOND:
-                if(!(stateSector & SECOND)) {
-                    numSec = (numSec + 1) % 13;
-                    valid &= false;
-                } else {
-                    stateSector &= ~SECOND;
-                }
-                break;
-
-            case THIRD:
-                if(!(stateSector & THIRD)) {
-                    numSec = (numSec + 1) % 13;
-                    valid &= false;
-                } else {
-                    stateSector &= ~THIRD;
-                }
-                break;
-                
-            case FOURTH:
-                if(!(stateSector & FOURTH)) {
-                    numSec = (numSec + 1) % 13;
-                    valid &= false;
-                } else {
-                    stateSector &= ~FOURTH;
-                }
-                break;
-
-            case FIFTH:
-                if(!(stateSector & FIFTH)) {
-                    numSec = (numSec + 1) % 13;
-                    valid &= false;
-                } else {
-                    stateSector &= ~FIFTH;
-                }
-                break;
-
-            case SIXTH:
-                if(!(stateSector & SIXTH)) {
-                    numSec = (numSec + 1) % 13;
-                    valid &= false;
-                } else {
-                    stateSector &= ~SIXTH;
-                }
-                break;                
-                
-            case SEVENTH:
-                if(!(stateSector & SEVENTH)) {
-                    numSec = (numSec + 1) % 13;
-                    valid &= false;
-                } else {
-                    stateSector &= ~SEVENTH;
-                }
-                break;
-
-            case EIGHTH:
-               if(!(stateSector & EIGHTH)) {
-                    numSec = (numSec + 1) % 13;
-                    valid &= false;
-                } else {
-                    stateSector &= ~EIGHTH;
-                }
-                break;
-
-            case NINTH:
-                if(!(stateSector & NINTH)) {
-                    numSec = (numSec + 1) % 13;
-                    valid &= false;
-                } else {
-                    stateSector &= ~NINTH;
-                }
-                break;
-                
-            case TENTH:
-                if(!(stateSector & TENTH)) {
-                    numSec = (numSec + 1) % 13;
-                    valid &= false;
-                } else {
-                    stateSector &= ~TENTH;
-                }
-                break;
-                
-            case ELEVENTH:
-                if(!(stateSector & ELEVENTH)) {
-                    numSec = (numSec + 1) % 13;
-                    valid &= false;
-                } else {
-                    stateSector &= ~ELEVENTH;
-                }
-                break;
-                
-            case TWELFTH:
-                if(!(stateSector & TWELFTH)) {
-                    numSec = (numSec + 1) % 13;
-                    valid &= false;
-                } else {
-                    stateSector &= ~TWELFTH;
-                }
-                break;
-                
-            case THIRTEENTH:
-                if(!(stateSector & THIRTEENTH)) {
-                    numSec = (numSec + 1) % 13;
-                    valid &= false;
-                } else {
-                    stateSector &= ~THIRTEENTH;
-                }
-                break;
-                
-            } 
-            
-    } while(!valid);
-
+    while (outOffGame[numSec]) {
+        numSec = (numSec + 1) % 13;
+    }
+    outOffGame[numSec] = true;
+    
     return numSec;
 }      
 
@@ -260,33 +175,38 @@ bool validDigit(std::string inNum) {
     for(char num : inNum){        
         res &= ((int)(num - '0') >= 0 && (int)(num - '0') <= 9); 
     }
-
     return res;
 }
 
 // Поиск текста в файле
-std::string serchText(const std::string fileName, int inSect) {
-    std::string resTxt = "", tempTxt;     
+std::string serchText(const std::string fileName, int inSect) {    
+    std::string resTxt = "", tempTxt = "", serchTxt = "";
+    std::ifstream file(fileName, std::ios::in);    
 
-    std::ifstream file(fileName);
-    
+    if (!file.is_open()) {
+        return "Error! The file cannot be opened.";
+    }     
+
     while (std::getline(file, tempTxt)) {
-
-        if (tempTxt.find("Question " + std::to_string(inSect)) != std::string::npos) {
+        serchTxt = "<Question " + std::to_string(inSect) + ">\r";
+          
+        if (tempTxt.find(serchTxt) != std::string::npos) {
             
             while (std::getline(file, tempTxt)) {
-                if (tempTxt.find("Question " + std::to_string(inSect + 1)) != std::string::npos) {
+                serchTxt = "<Question " + std::to_string(inSect + 1) + ">\r";
+                if (tempTxt.find(serchTxt) != std::string::npos) {
                     break; 
                 } else {
                     resTxt += tempTxt;
-                    resTxt += "\n\t";
+                    if (tempTxt.find(' ') != std::string::npos){
+                        resTxt += "\n\t";
+                    }                    
                 }
             }           
         }
+        tempTxt = "";
     }
 
+    file.close();
     return resTxt;
 }  
-
-
-

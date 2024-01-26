@@ -4,7 +4,7 @@
         {
             "type": "shell",
             "label": "g++.exe build active file",
-            "command": "${env:SystemDrive}/msys64/mingw64/bin/g++.exe",
+            "command": "${env:SysDrive}/msys64/mingw64/bin/g++.exe",
             "args": [
                 "-std=c++17",
                 "-g",
@@ -13,7 +13,7 @@
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
             "options": {
-                "cwd": "${env:SystemDrive}\\msys64\\mingw64\\bin"
+                "cwd": "${env:SysDrive}\\msys64\\mingw64\\bin"
             },
             "problemMatcher": [
                 "$gcc"
@@ -23,7 +23,7 @@
         {
             "type": "cppbuild",
             "label": "C/C++: g++.exe build active file",
-            "command": "${SystemDrive}\\msys64\\mingw64\\bin\\g++.exe",
+            "command": "${SysDrive}\\msys64\\mingw64\\bin\\g++.exe",
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
@@ -32,7 +32,7 @@
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
             "options": {
-                "cwd": "${SystemDrive}\\msys64\\mingw64\\bin"
+                "cwd": "${SysDrive}\\msys64\\mingw64\\bin"
             },
             "problemMatcher": [
                 "$gcc"
@@ -43,7 +43,7 @@
         {
             "type": "cppbuild",
             "label": "C/C++: g++.exe сборка активного файла",
-            "command": "L:\\msys64\\mingw64\\bin\\g++.exe",
+            "command": "${env:SysDrive}\\msys64\\mingw64\\bin\\g++.exe",
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",

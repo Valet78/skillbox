@@ -8,11 +8,11 @@
             "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "S{env:SystemDrive}\\msys64\\mingw64\\bin",
+            "cwd": "${env:SysDrive}\\msys64\\mingw64\\bin",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "${env:SystemDrive}\\msys64\\mingw64\\bin\\gdb.exe",
+            "miDebuggerPath": "${env:SysDrive}\\msys64\\mingw64\\bin\\gdb.exe",            
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
