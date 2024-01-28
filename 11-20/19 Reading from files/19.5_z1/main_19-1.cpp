@@ -9,7 +9,8 @@ std::string getPath(std::string);   // Получение полного пут�
 std::string inText(std::string);    // Ввод искомого текста, слова
 
 int main(int argc, char* argv[]) {
-    std::string pathFull = getPath(argv[0]) + "words.txt";       // Полный путь к исполняемому файлу
+    // std::string pathFull = getPath(argv[0]) + "words.txt";       // Полный путь
+    std::string pathFull = "words.txt";                             // Относительная адресация 
     std::string txt = "";
     int count = 0;
 
@@ -42,23 +43,23 @@ int main(int argc, char* argv[]) {
 }
 // *************************
 
-// Получение полного пути (с преобразованием) к папке с файлами  
-std::string getPath(std::string inTxt) {
-    std::string resTxt = "";
-    int ind = inTxt.find_last_of((char) 92) + 1;
-    inTxt = inTxt.substr(0, ind);
+// // Получение полного пути (с преобразованием) к папке с файлами  
+// std::string getPath(std::string inTxt) {
+//     std::string resTxt = "";
+//     int ind = inTxt.find_last_of((char) 92) + 1;
+//     inTxt = inTxt.substr(0, ind);
 
-    for(int i = 0; i < inTxt.size(); i++) {
-            if(inTxt[i] == (char)92) {
-                resTxt.push_back((char)92);
-                resTxt.push_back((char)92);           
-            } else {
-                resTxt.push_back(inTxt[i]);
-            }
-        }
+//     for(int i = 0; i < inTxt.size(); i++) {
+//             if(inTxt[i] == (char)92) {
+//                 resTxt.push_back((char)92);
+//                 resTxt.push_back((char)92);           
+//             } else {
+//                 resTxt.push_back(inTxt[i]);
+//             }
+//         }
 
-    return resTxt;
-}
+//     return resTxt;
+// }
 
 // Ввод искомого текста, слова
 std::string inText(std::string inTxt) {
