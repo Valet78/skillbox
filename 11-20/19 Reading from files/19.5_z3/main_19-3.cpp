@@ -4,11 +4,12 @@
 #include<fstream>
 #include <vector>
 
-std::string getPath(std::string);   // Получение полного пути (с преобразованием) к папке с файлами
+// std::string getPath(std::string);   // Получение полного пути (с преобразованием) к папке с файлами
 bool validNum(std::string);         // Проверка ввода числа
 
 int main(int argc, char* argv[]) {    
-    std::string pathFull = getPath(argv[0]) + "tabl.txt";       // Полный путь к файлу включая его имя    
+    // std::string pathFull = getPath(argv[0]) + "tabl.txt";       // Полный путь к файлу включая его имя    
+    std::string pathFull = "tabl.txt";                              // Относительная адресация
     int sumMoney = 0, maxMoney = 0;
     std::string nameFirst = "", nameLast = "", moneyTxt = "", dateTxt = "";
     std::string nameFirstMax = "", nameLastMax = "", moneyTxtMax = "", dateTxtMax = "";
@@ -55,25 +56,25 @@ int main(int argc, char* argv[]) {
 
 // ********************************
 
-// Получение полного пути (с преобразованием) к папке с файлами 
-std::string getPath(std::string inTxt) {
-    std::string resTxt = "";
-    int ind = inTxt.find_last_of((char) 92) + 1;
-    inTxt = inTxt.substr(0, ind);
+// // Получение полного пути (с преобразованием) к папке с файлами 
+// std::string getPath(std::string inTxt) {
+//     std::string resTxt = "";
+//     int ind = inTxt.find_last_of((char) 92) + 1;
+//     inTxt = inTxt.substr(0, ind);
 
-    if (inTxt.find((char)92) || inTxt.find((char)47)) {
-        for(int i = 0; i < inTxt.size(); i++) {
-                if(inTxt[i] == (char)92) {
-                    resTxt.push_back((char)92);
-                    resTxt.push_back((char)92);           
-                } else {
-                    resTxt.push_back(inTxt[i]);
-                }
-            }
-    }
+//     if (inTxt.find((char)92) || inTxt.find((char)47)) {
+//         for(int i = 0; i < inTxt.size(); i++) {
+//                 if(inTxt[i] == (char)92) {
+//                     resTxt.push_back((char)92);
+//                     resTxt.push_back((char)92);           
+//                 } else {
+//                     resTxt.push_back(inTxt[i]);
+//                 }
+//             }
+//     }
 
-    return resTxt;
-}
+//     return resTxt;
+// }
 
 // Проверка ввода числа
 bool validNum(std::string inTxt) {
