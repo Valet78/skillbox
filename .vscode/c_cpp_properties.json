@@ -5,7 +5,7 @@
             "includePath": [
                 "${workspaceFolder}\\**",
                 "${env:SysDrive}\\msys64\\mingw64\\include\\**",
-                "${env:SysDrive}\\msys64\\mingv\\bin\\**",
+                "${env:SysDrive}\\msys64\\mingw\\bin\\**",
                 "${env:SysDrive}\\"
             ],
             "defines": [

@@ -10,8 +10,8 @@ bool validDate(std::string);                // Проверка вводимой
 
 int main () {
     std::string fileName = "vedomost.txt", request = "yes";
-    setlocale(LC_ALL, "ru_RU.utf8");
-    // setlocale(LC_ALL, "RUS");
+    // setlocale(LC_ALL, "ru_RU.utf8");
+    setlocale(LC_ALL, "RUS");
     std::ofstream file;  
 
     std::string firstName = "", lastName = "", dateTxt = "", payments = "";

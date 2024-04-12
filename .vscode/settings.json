@@ -57,5 +57,8 @@
         "ratio": "cpp"
     },
     "files.encoding": "utf8",
-    "terminal.integrated.detectLocale": "on"
+    "terminal.integrated.detectLocale": "on",
+    "terminal.explorerKind": "external",
+    "terminal.integrated.altClickMovesCursor": false,
+    "terminal.integrated.allowChords": false
 }
