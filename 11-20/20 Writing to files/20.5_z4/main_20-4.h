@@ -5,19 +5,26 @@
 #include <regex>
 #include <fstream>
 #include <algorithm>
+#include <filesystem>
 
 // Глобальные переменные
 int sumMon = 0;
 int data[7]{0};
+std::string statTxt = "";
+std::string fileStatName = "status.txt", fileDataName = "data.bin";
 std::string strData[]{"5000", "2000", "1000", "500", "200", "100"};
+std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> convWStr; // Для конвертации строк в wstring
 
-int moneySum();  // Сумма в банкомате
+// Функции
+std::string dateNow(); // Получение текущей даты и времени
 std::string selectAction(); // Выбор действия
-bool validReadFile(std::string &); // Открытие файла и проверка
 std::string truncSpaces(std::string); // Отсечение пробелов в строке с двух сторон
-bool validNum(std::string &);   // Проверим значения в файле
-// bool addBanknotes(); // Добавляем банкноты
+int moneySum();  // Сумма в банкомате
 int randNum(int, int); // Генерируем случайное число в диапазоне
-bool randLoadFile(std::string &); // Загрузка банкомата банкнотами
-bool saveToFile(std::string &);  // Запись в файл
-int withdrawMoney(std::string &);  // Снятие денег со счета
+bool saveDataToFile();  // Запись в файл данных Data[]
+void saveStatToFile(std::string &);  // Запись в файл статистики
+bool loadDataFromFile();    // Загружаем данные из файла с данными
+bool randDataFile(); // Загрузка банкомата банкнотами
+bool validNum(std::string &);   // Проверим значения в файле
+int withdrawMoney();  // Снятие денег со счета
+void errToStat();

@@ -3,54 +3,79 @@
 
 int main() {
     std::string askTxt = "", tmp = "";
-    std::string fileName = "status.bin";
     std::srand(std::time(nullptr));     // Для генерации случайных чисел
+    setlocale(LC_ALL, "Russian");
+    bool fValid = true;
 
-    bool fValid = validReadFile(fileName); // Проверим наличие файла и заполним массив данных
-    if (!fValid) {
-        std::cerr << "An error in the structure of the \"" << fileName <<
-                  "\" file has been detected! The program will be closed." << std::endl;
-        system("pause");
-        return -1;
+    if (!std::filesystem::exists(fileDataName)) {
+        // Создаем новый файл при его отсутствии
+        if (!saveDataToFile()) {  // Запись в файл
+            errToStat();
+            system("pause");
+            return -1;
+        }
+    } else {
+        if (!loadDataFromFile()) {
+            errToStat();
+            system("pause");
+            return -1;
+        }
     }
+
+    statTxt = "The program is running. Available: " + std::to_string(moneySum());
+    saveStatToFile(statTxt);
 
     do {
         system("CLS");
-        std::cout << std::endl << "\t*** Simulator of ATM operation. ***" << std::endl;
+        std::wcout << std::endl << L"\t*** Симулятор работы банкомата ***" << std::endl;
         sumMon = moneySum();
-        std::cout << "Available: " << std::to_string(sumMon) << " rub." << std::endl;
+        std::wcout << L"Доступно: " << convWStr.from_bytes(std::to_string(sumMon)) << L" руб." << std::endl;
         askTxt = selectAction();
 
         // Выбираем дальнейшие действия
         if (askTxt == "+") {
 
-            fValid = randLoadFile(fileName); // Загрузка банкомата банкнотами
+            fValid = randDataFile(); // Загрузка банкомата банкнотами
             if (!fValid) {
-                std::cerr << std::endl << "The data is incorrect or data could not be written to the \"" << fileName
-                          << "\" file! The program will be closed." << std::endl;
+                errToStat();
+                system("pause");
                 return -1;
             } else {
-                std::cout << "The ATM is replenished with banknotes and is ready to work." << std::endl;
+                std::wcout << L"Банкомат пополнен банкнотами и готов к работе." << std::endl;
             }
+            statTxt = "The ATM has been topped up. Available: " + std::to_string(sumMon);
+            saveStatToFile(statTxt);
 
-        } else if (askTxt == "-") {
-            int withdrawSum = withdrawMoney(fileName);
+        } else if (askTxt == "-" && sumMon > 0) {
+            int withdrawSum = withdrawMoney();
 
             if (withdrawSum == -1) {
-                std::cerr << std::endl << "Error! Data could not be written to the \"" << fileName
-                          << "\" file! The program will be closed." << std::endl;
+                std::wcerr << std::endl << L"Ошибка! Не удалось записать данные в файл \""
+                           << convWStr.from_bytes(fileDataName)
+                           << L"\"! Программа будет закрыта." << std::endl;
+                errToStat();
+                system("pause");
                 return -1;
             } else if (withdrawSum == 0) {
-                std::cerr << std::endl << "It is necessary to replenish the ATM!" << std::endl;
-            } else {
-                std::cout << "The ATM is replenished with banknotes and is ready to work." << std::endl;
+                std::wcerr << std::endl << L"Была снята вся имеющаяся наличность.Пополните банкомат!" << std::endl;
+                system("pause");
             }
 
-        } else {
-            std::cerr << std::endl << "The ATM simulator has been stopped. We are waiting for you again." << std::endl;
+            statTxt = "Money withdrawal has been made. Available: " + std::to_string(sumMon);
+            saveStatToFile(statTxt);
+
+        } else if (askTxt == "-" && sumMon == 0) {
+            std::wcerr << std::endl << L"Необходимо пополнить банкомат купюрами!" << std::endl;
+            system("pause");
+
+        } else if (askTxt == "exit") {
+            std::wcerr << std::endl << L"Симулятор банкомата был остановлен. Ждём вас снова." << std::endl;
+            statTxt = "The program has been terminated. Available: " + std::to_string(sumMon);
+            saveStatToFile(statTxt);
         }
 
     } while (askTxt != "exit");
+
 
     system("pause");
     return 0;
@@ -67,25 +92,37 @@ int moneySum() {
     return res;
 }
 
+// Получение текущей даты и времени
+std::string dateNow() {
+    std::string res = "";
+    std::time_t curTime = time(0);
+    std::string tt = ctime(&curTime);
+
+    res = "<" + tt.substr(8, 2) + " " + tt.substr(4, 3) + " " +
+          tt.substr(20, 4) + " " + tt.substr(11, 8) + "> ";
+
+    return res;
+}
+
 // Выбор действия
 std::string selectAction() {
     std::string resTxt = "";
 
     do {
-        std::cout << std::endl << "Specify the action with the ATM:" << std::endl;
-        std::cout << "\"+\" - add banknotes;" << std::endl;
-        std::cout << "\"-\" - withdraw money from the account;" << std::endl;
-        std::cout << "\"exit\" - end the session." << std::endl;
-        std::cout << "**************************************" << std::endl;
-        std::cout << "Your choice:";
+        std::wcout << std::endl << L"Укажите действие с банкоматом:" << std::endl;
+        std::wcout << L"\"+\" - заполнение банкомата;" << std::endl;
+        std::wcout << L"\"-\" - снять деньги со счета;" << std::endl;
+        std::wcout << L"\"exit\" - завершение работы симулятора" << std::endl;
+        std::wcout << L"**************************************" << std::endl;
+        std::wcout << L"Ваш выбор: ";
         std::getline(std::cin, resTxt);
         // Обрежем "случайные" пробелы до и после слова
         resTxt = truncSpaces(resTxt);
 
         if (resTxt.empty()) {
-            std::cerr << std::endl << "You forgot to make a choice! Try again." << std::endl;
+            std::wcerr << std::endl << L"Вы забыли сделать выбор! Попробуйте снова." << std::endl;
         } else if (resTxt != "+" && resTxt != "-" && resTxt != "exit") {
-            std::cerr << std::endl << "Make a choice from the suggested options! Try again." << std::endl;
+            std::wcerr << std::endl << L"Сделайте выбор из предложенных вариантов!" << std::endl;
         }
 
     } while (!(resTxt == "+" || resTxt == "-" || resTxt == "exit"));
@@ -100,66 +137,13 @@ std::string truncSpaces(std::string inTxt) {
     return inTxt;
 }
 
-// Открытие файла и проверка
-bool validReadFile(std::string &nameFile) {
-    bool res = true;
-    std::string arg1 = "", arg2 = "";
-    int index = 0, numSum = 0;
-    std::ifstream file;
-
-    file.exceptions(std::fstream::badbit | std::fstream::failbit);
-    try {
-        file.open(nameFile, std::ios::binary | std::ios::in);
-
-        while (!file.eof()) {
-            file >> arg1 >> arg2;
-            if (index == 0) {
-                res &= (arg1 == "status" && validNum(arg2));
-            } else {
-                res &= (std::find(begin(strData), end(strData), arg1) != end(strData) &&
-                        validNum(arg2));
-            }
-
-            if (res) {
-                data[index] = std::stoi(arg2);
-            }
-
-            index++;
-        }
-
-        for (int i = 1; i < std::size(data); i++) { // Проверка суммарного значения и значения status
-            numSum += data[i];
-        }
-
-        res &= (numSum == data[0] && numSum >= 0 && numSum <= 1000) ? true : false;
-
-    } catch (const std::ofstream::failure &e) {
-//        std::cerr << "Error opening a file or reading data!" << std::endl <<
-//                  "Check the file availability \"" << nameFile << "\"." << std::endl <<
-//                  "The program will be closed." << std::endl;
-        return false;
-    }
-    return res;
-}
-
-// Проверим значения в файле
-bool validNum(std::string &inTxt) {
-    bool res = true;
-
-    for (char ch: inTxt) {
-        res &= (ch >= '0' && ch <= '9') ? true : false;
-    }
-
-    return res;
-}
-
 // Генерируем случайное число в диапазоне
 int randNum(int inStart, int inStop) {
     return inStart + std::rand() % (inStart - inStop + 1);
 }
 
 // Загрузка банкомата банкнотами
-bool randLoadFile(std::string &inFile) {
+bool randDataFile() {
     int numTmp = 1000 - data[0], numRand = 0, numAll = 0;
     int sizeData = std::size(data);
 
@@ -179,46 +163,17 @@ bool randLoadFile(std::string &inFile) {
     }
     data[0] = numTmp;
 
-    return saveToFile(inFile);
-}
-
-// Запись в файл
-bool saveToFile(std::string &inFile) {
-    std::ofstream file;
-    int sizeData = std::size(data);
-
-    file.exceptions(std::ofstream::badbit | std::ofstream::failbit);
-    try {
-        file.open(inFile, std::ios::out | std::ios::binary | std::ios::trunc);
-        for (int i = 0; i < sizeData; i++) {
-
-            if (i == 0) {
-                file << "status " << data[0] << "\n";
-            } else if (i < sizeData - 1) {
-                file << strData[i - 1] << " " << data[i] << "\n";
-            } else {
-                file << strData[i - 1] << " " << data[i];
-            }
-        }
-
-    } catch (const std::ofstream::failure &e) {
-//        std::cerr << "Error (code: " << e.code() << ")! " << e.what() << std::endl;
-//        std::cerr << "Error opening a file or writing data to a file! The program will be closed." << std::endl;
-        file.close();
-        return false;
-    }
-    file.close();
-    return true;
+    return saveDataToFile();
 }
 
 // Снятие денег со счета
-int withdrawMoney(std::string &inFile) {
+int withdrawMoney() {
     int resSum = 0;
     bool valNum = true;
     std::string askTxt = "";
 
     do {
-        std::cout << std::endl << "Specify the amount to withdraw:";
+        std::wcout << std::endl << L"Укажите сумму для вывода средств:";
         std::getline(std::cin, askTxt);
         askTxt = truncSpaces(askTxt);
         if (!askTxt.empty()) {
@@ -227,11 +182,12 @@ int withdrawMoney(std::string &inFile) {
 
             if (resSum == -1) {
                 return -1;
-            } else if (resSum > sumMon || resSum <= 0) {
-                std::cerr << "The ATM will not be able to give you such an amount!" << std::endl;
-                return 0;
-            } else if (resSum % 100) {
-                std::cerr << "The ATM can only issue " << (resSum / 100) * 100 << " rub." << std::endl;
+            } else if (resSum > sumMon) {
+                std::wcerr << L"Банкомат не сможет выдать вам такую сумму!" << std::endl;
+                valNum = false;
+            } else if (resSum % 100 != 0) {
+                std::wcerr << L"Банкомат может выдавать только "
+                           << convWStr.from_bytes(std::to_string((resSum / 100) * 100)) << L" руб." << std::endl;
                 valNum = false;
             } else {
                 int numTmp = 0, bill = 0;
@@ -245,17 +201,86 @@ int withdrawMoney(std::string &inFile) {
                         resSum %= numTmp;
                     }
                 }
+                valNum = true;
             }
-            valNum = true;
 
         } else {
-            std::cerr << "You forgot to enter the value! Try again." << std::endl;
+            std::wcerr << L"Вы забыли ввести значение! Попробуйте снова." << std::endl;
             valNum = false;
         }
 
     } while (!valNum);
-
-    resSum = (saveToFile(inFile)) ? resSum : -1;
+    resSum = moneySum();
+    resSum = (resSum > 0) ? resSum : 0;
+    resSum = (saveDataToFile()) ? resSum : -1;
     return resSum;
 }
 
+// Запись в файл данных Data[]
+bool saveDataToFile() {
+    std::ofstream file;
+
+    file.exceptions(std::ofstream::badbit | std::ofstream::failbit);
+    try {
+        file.open(fileDataName, std::ios::out | std::ios::binary | std::ios::trunc);
+        file.write((char *) data, sizeof(data));
+
+    } catch (const std::ofstream::failure &e) {
+        file.close();
+        std::wcout << L"Не удалось создать/записать файл! Программа будет закрыта." << std::endl;
+        return false;
+    }
+    file.close();
+    return true;
+}
+
+// Загружаем данные из файла с данными
+bool loadDataFromFile() {
+    std::ifstream file;
+
+    file.exceptions(std::ofstream::badbit | std::ofstream::failbit);
+    try {
+        file.open(fileDataName, std::ios::in | std::ios::binary);
+        file.read((char *) data, sizeof(data));
+
+    } catch (const std::ifstream::failure &e) {
+        file.close();
+        std::wcout << L"Ошибка чтения данных из файла! Программа будет закрыта." << std::endl;
+        return false;
+    }
+    file.close();
+    return true;
+}
+
+// Запись в файл статистики
+void saveStatToFile(std::string &inTxt) {
+    std::ofstream file;
+
+    file.exceptions(std::ofstream::badbit | std::ofstream::failbit);
+    try {
+        file.open(fileStatName, std::ios::out | std::ios::app);
+        file << dateNow() << inTxt << "\n";
+
+    } catch (const std::ofstream::failure &e) {
+        file.close();
+        std::wcout << L"Ошибка записи файла статистики! Программа будет закрыта." << std::endl;
+        system("pause");
+    }
+    file.close();
+}
+
+// Проверим значения в файле
+bool validNum(std::string &inTxt) {
+    bool res = true;
+
+    for (char ch: inTxt) {
+        res &= (ch >= '0' && ch <= '9') ? true : false;
+    }
+
+    return res;
+}
+
+void errToStat() {
+    statTxt = "Emergency shutdown of the program!";
+    saveStatToFile(statTxt);
+};
