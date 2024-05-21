@@ -6,6 +6,7 @@
 #include <fstream>
 #include <algorithm>
 #include <filesystem>
+#include <codecvt>  // Для конвертации строк в wstring
 
 // Глобальные переменные
 int sumMon = 0;
