@@ -100,20 +100,22 @@ bool validFloat(std::string &inTxt) {
     bool res = true;
     int num = 0;
 
-    for (char ch: inTxt) {
-        if (ch == '.') {
+    inTxt = (inTxt[0] == ',' || inTxt[0] == '.') ? '0' + inTxt : inTxt;
+
+    for (int i = 0; i < inTxt.length(); i++) {
+
+        if (inTxt[i] == ',' || inTxt[i] == '.') {
+            inTxt[i] = ',';
             num++;
             res &= true;
-        } else {
-            res &= (ch >= '0' && ch <= '9') ? true : false;
+            continue;
         }
+        res &= (inTxt[i] >= '0' && inTxt[i] <= '9') ? true : false;
     }
 
     res &= (num > 1) ? false : true;
 
     return res;
-
-
 }
 
 // запрос наличия печки в здании
