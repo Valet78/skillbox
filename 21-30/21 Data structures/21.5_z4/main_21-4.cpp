@@ -7,14 +7,17 @@ int main() {
 
     bool itWin = false, resMove = true;
     int kodMove = 0;
+    std::string askDoMove = "";
     inicMassiv();
 
     std::wcout << L"   * Пошаговая ролевая игра *" << std::endl << std::endl;
-    std::wcout << L"Для начала игры создадим игроков, одного пользовательского и несколько противников." << std::endl;
-    createPlayer(); // пользовательский игрок
-    createCharacter(5);
 
-    std::string doMove = "";
+    if (!askLoadGame(L"Желаете ли вы загрузить ранее сохранённую игру (yes/no)?: ")) {
+        std::wcout << L"Вследствие ошибки игра будет завершена." << std::endl;
+        system("pause");
+        return -1;
+    }
+
     printField();
 
     do {
@@ -22,8 +25,56 @@ int main() {
         itWin = false;
 
         // Ход игрока
-        doMove = requestMove();
-        resMove &= executeMove(characters[0], doMove);
+        askDoMove = requestMove();
+
+        if (askDoMove == "LOAD") {
+            std::string comm = "";
+
+            do {
+                comm = inputText(L"Вы уверены, что хотите загрузить данные предыдущей игры (\"yes\" или \"no\")?");
+                comm = truncSpaces(comm);
+
+                if (!(comm == "yes" || comm == "no")) {
+                    std::wcout << L"Укажите \"yes\" или \"no\"!" << std::endl;
+                }
+
+            } while (!(comm == "yes" || comm == "no"));
+
+            if (comm == "yes") {
+                int resLoad = loadDataFromFile();
+
+                if (resLoad == -1) {
+                    std::wcout << L"Вследствие ошибки игра будет завершена." << std::endl;
+                    system("pause");
+                    return -1;
+
+                } else if (resLoad == 0) {
+                    std::wcout << L"Игра будет продолжена." << std::endl;
+                    system("pause");
+
+                } else {
+                    resMove = true;
+                    itWin = false;
+
+                    std::wcout << L"Загрузка данных прошла успешно.Продолжаем предыдущую игру." << std::endl;
+                    system("pause");
+                    printField();
+
+                    // Ход игрока
+                    askDoMove = requestMove();
+                }
+            }
+
+        } else if (askDoMove == "SAVE") {
+            if (saveDataToFile()) {
+                std::wcout << L"Данные успешно сохранены в файл." << std::endl;
+                system("pause");
+            } else {
+                return false;
+            }
+        }
+
+        resMove &= executeMove(characters[0], askDoMove);
 
         if (resMove) {
             int pe = 1;
@@ -35,20 +86,20 @@ int main() {
 
                 switch (kodMove) {
                     case 0:
-                        doMove = "U";
+                        askDoMove = "U";
                         break;
                     case 1:
-                        doMove = "R";
+                        askDoMove = "R";
                         break;
                     case 2:
-                        doMove = "D";
+                        askDoMove = "D";
                         break;
                     case 3:
-                        doMove = "L";
+                        askDoMove = "L";
                         break;
                 }
 
-                resMove &= executeMove(characters[pe], doMove);
+                resMove &= executeMove(characters[pe], askDoMove);
                 pe += (resMove) ? 1 : 0;
 
             } while (pe < characters.size());
@@ -94,15 +145,28 @@ void inicMassiv() {
 // Вывод поля на экран
 void printField() {
     system("cls");
+    int sizeChar = characters.size();
 
     for (int i = 0; i < 20; i++) {              // y
         for (int k = 0; k < 20; k++) {          // x
             std::wcout << convWStr.from_bytes(field[i][k]) << L"  ";
         }
 
-        if (i < characters.size()) {
+        if (i < sizeChar) {
             std::wcout << L"\tИгрок: " << convWStr.from_bytes(characters[i].name) << L". Уровень жизни: "
                        << characters[i].life << L", брони: " << characters[i].armor << std::endl;
+        } else if (i == sizeChar + 1) {
+            std::wcout << L"\tPS: Используйте следующие значения:" << std::endl;
+
+        } else if (i == sizeChar + 2) {
+            std::wcout << L"\t    \"L\" - движение влево, \"R\" - движение вправо," << std::endl;
+
+        } else if (i == sizeChar + 3) {
+            std::wcout << L"\t    \"U\" - движение вверх, \"D\" - движение вниз," << std::endl;
+
+        } else if (i == sizeChar + 4) {
+            std::wcout << L"\t    \"SAVE\" - для сохранения, \"LOAD\" - для загрузки." << std::endl;
+
         } else {
             std::cout << std::endl;
         }
@@ -211,12 +275,12 @@ void createCharacter(int inNum) {
 // Запрос хода игрока
 std::string requestMove() {
     std::string doMove = "";
-    std::string variant[]{"L", "R", "U", "D"};
+    std::string variant[]{"L", "R", "U", "D", "LOAD", "SAVE"};
     bool valid = true;
 
     do {
         valid = true;
-        doMove = inputText(L"Укажите направление хода игрока (\"L\", \"R\", \"U\", \"D\"): ");
+        doMove = inputText(L"Укажите направление хода игрока: ");
         valid &= (std::find(begin(variant), end(variant), doMove) != end(variant)) ? true : false;
 
         if (!valid) {
@@ -230,7 +294,6 @@ std::string requestMove() {
 
 // Ход персонажей (код хода)
 bool executeMove(player &inPlayer, std::string &inToMove) {
-    bool res = true;
     int opp;
     int x = inPlayer.coordField.x;
     int y = inPlayer.coordField.y;
@@ -248,7 +311,7 @@ bool executeMove(player &inPlayer, std::string &inToMove) {
             attackOpp(inPlayer, characters[opp]);
 
         } else {
-            res = false;
+            return false;
         }
 
     } else if (inToMove == "R" && (x + 1) < 20) {
@@ -263,7 +326,7 @@ bool executeMove(player &inPlayer, std::string &inToMove) {
             attackOpp(inPlayer, characters[opp]);
 
         } else {
-            res = false;
+            return false;
         }
 
     } else if (inToMove == "U" && (y - 1) < 20) {
@@ -278,7 +341,7 @@ bool executeMove(player &inPlayer, std::string &inToMove) {
             attackOpp(inPlayer, characters[opp]);
 
         } else {
-            res = false;
+            return false;
         }
 
     } else if (inToMove == "D" && (y + 1) >= 0) {
@@ -293,11 +356,14 @@ bool executeMove(player &inPlayer, std::string &inToMove) {
             attackOpp(inPlayer, characters[opp]);
 
         } else {
-            res = false;
+            return false;
         }
+
+    } else {
+        return false;
     }
 
-    return res;
+    return true;
 }
 
 // Ищем оппонента в заданной точке поля
@@ -330,3 +396,122 @@ void attackOpp(player &inHero, player &inOpp) {
 
     system("pause");
 }
+
+// Запись в файл данных вектора
+bool saveDataToFile() {
+    std::ofstream file;
+
+    file.exceptions(std::ofstream::badbit | std::ofstream::failbit);
+    try {
+        file.open(fileDataName, std::ios::out | std::ios::binary | std::ios::trunc);
+
+        for (player &e: characters) {
+            size_t nameSize = e.name.length();
+            file.write(reinterpret_cast<const char *> (&nameSize), sizeof nameSize);
+            file.write(e.name.data(), nameSize);
+            file.write(reinterpret_cast<const char *> (&e.life), sizeof e.life);
+            file.write(reinterpret_cast<const char *> (&e.armor), sizeof e.armor);
+            file.write(reinterpret_cast<const char *> (&e.damage), sizeof e.damage);
+            file.write((const char *) (&e.mark), sizeof e.mark);
+            file.write(reinterpret_cast<const char *> (&e.coordField.x), sizeof e.coordField.x);
+            file.write(reinterpret_cast<const char *> (&e.coordField.y), sizeof e.coordField.y);
+        }
+
+        file.close();
+
+    } catch (const std::ofstream::failure &e) {
+        file.close();
+        std::wcout << L"Не удалось создать/записать файл! Программа будет закрыта." << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+// Загружаем данные из файла с данными
+int loadDataFromFile() {
+    std::ifstream file;
+
+
+    if (std::filesystem::exists(fileDataName)) {
+        characters.clear();
+
+        file.exceptions(std::ifstream::badbit | std::ifstream::failbit);
+        try {
+            file.open(fileDataName, std::ios::in | std::ios::binary);
+
+//            while ((char) file.peek() != '\r') {
+            for (int k = 0; k < 6; k++) {
+
+                player inPl;
+                size_t nameSize(0);
+                file.read(reinterpret_cast<char *> (&nameSize), sizeof nameSize);
+                char *tmp = new char[nameSize + 1];
+                file.read(tmp, nameSize);
+                tmp[nameSize] = '\0';
+                inPl.name = tmp;
+                delete[] tmp;
+                file.read(reinterpret_cast<char *> (&inPl.life), sizeof inPl.life);
+                file.read(reinterpret_cast<char *> (&inPl.armor), sizeof inPl.armor);
+                file.read(reinterpret_cast<char *> (&inPl.damage), sizeof inPl.damage);
+                file.read((char *) (&inPl.mark), sizeof inPl.mark);
+                file.read(reinterpret_cast<char *> (&inPl.coordField.x), sizeof inPl.coordField.x);
+                file.read(reinterpret_cast<char *> (&inPl.coordField.y), sizeof inPl.coordField.y);
+                field[inPl.coordField.y][inPl.coordField.x] = inPl.mark;
+                characters.push_back(inPl);
+            }
+            file.close();
+
+        } catch (const std::ifstream::failure &e) {
+            file.close();
+            std::wcout << L"Ошибка чтения данных из файла! Программа будет закрыта." << std::endl;
+            std::cout << "code = " << e.what() << " - " << e.code() << std::endl;
+            return -1;
+        }
+
+    } else {
+        std::wcout << L"Видимо ранее игра не сохранялась!" << std::endl;
+        return 0;
+    }
+
+    return 1;
+}
+
+// Запрос на загрузку ранее сохранённой игры
+bool askLoadGame(std::wstring inWTxt) {
+    std::string comm = "";
+
+    do {
+        comm = inputText(inWTxt);
+        comm = truncSpaces(comm);
+
+        if (!(comm == "yes" || comm == "no")) {
+            std::wcout << L"Укажите \"yes\" или \"no\"!" << std::endl;
+        }
+
+    } while (!(comm == "yes" || comm == "no"));
+
+    if (comm == "yes") {
+        int resLoad = loadDataFromFile();
+
+        if (resLoad == -1) {
+            system("pause");
+            return false;
+        } else if (resLoad == 0) {
+            system("pause");
+        } else {
+            std::wcout << L"Загрузка данных прошла успешно.Продолжаем предыдущую игру." << std::endl;
+            system("pause");
+        }
+
+    } else {
+        std::wcout << L"Для начала игры создадим игроков, одного пользовательского и несколько противников."
+                   << std::endl;
+        createPlayer();                 // пользовательский игрок
+        createCharacter(5);      // 5 игроков врага
+    }
+
+    return true;
+}
+
+

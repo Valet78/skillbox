@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <filesystem>
+#include <fstream>
 #include <ctime>
 #include <regex>
 #include <vector>
@@ -8,6 +10,7 @@
 
 
 // Глобальные переменные
+std::string fileDataName = "data.bin";
 char field[20][20];
 std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> convWStr; // Для конвертации строк в wstring
 struct coord {
@@ -19,7 +22,7 @@ struct player {
     char mark = ' ';
     coord coordField{0, 0};
 };
-std::vector<player> characters;
+std::vector<player> characters{0};
 
 
 // Функции
@@ -32,10 +35,12 @@ std::string truncSpaces(std::string &);         // Отсечение пробе
 std::string inputText(std::wstring);            // Ввод текста и проверка на пустую строку
 void createPlayer();                            // Создаём пользовательского игрока
 void createCharacter(int);                      // Создаем игроков противника
+bool saveDataToFile();                          // Запись в файл данных вектора
+int loadDataFromFile();                         // Загружаем данные из файла с данными
 std::string requestMove();                      // Запрос хода игрока
 int searchOpponent(int, int);                   // Ищем оппонента в заданной точке поля
 void attackOpp(player &, player &);             // Отработки атаки
 bool executeMove(player &, std::string &);      // Ход персонажей (код хода)
-
+bool askLoadGame(std::wstring);                 // Запрос на загрузку ранее сохранённой игры
 
 
