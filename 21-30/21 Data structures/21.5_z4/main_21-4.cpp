@@ -72,6 +72,11 @@ int main() {
             } else {
                 return false;
             }
+
+        } else if (askDoMove == "EXIT") {
+            std::wcout << L"Уже уходите? Надеемся увидеть Вас снова. Всего доброго." << std::endl;
+            system("pause");
+            return 0;
         }
 
         resMove &= executeMove(characters[0], askDoMove);
@@ -108,6 +113,8 @@ int main() {
             if (characters[0].life == 0) {
                 itWin = true;
                 std::wcout << L"Ваш игрок проиграл в этой игре! Враги одолели его." << std::endl;
+                system("pause");
+
             } else {
                 int numVin = 0;
 
@@ -118,6 +125,7 @@ int main() {
                 if (numVin == 0) {
                     itWin = true;
                     std::wcout << L"Поздравляем, Ваш игрок выиграл эту битву!" << std::endl;
+                    system("pause");
                 }
             }
         }
@@ -165,12 +173,14 @@ void printField() {
             std::wcout << L"\t    \"U\" - движение вверх, \"D\" - движение вниз," << std::endl;
 
         } else if (i == sizeChar + 4) {
-            std::wcout << L"\t    \"SAVE\" - для сохранения, \"LOAD\" - для загрузки." << std::endl;
+            std::wcout << L"\t    \"SAVE\" - для сохранения, \"LOAD\" - для загрузки," << std::endl;
+
+        } else if (i == sizeChar + 5) {
+            std::wcout << L"\t    \"EXIT\" - выход из игры (не забудьте сохраниться)." << std::endl;
 
         } else {
             std::cout << std::endl;
         }
-
     }
     std::cout << std::endl;
 }
@@ -275,7 +285,7 @@ void createCharacter(int inNum) {
 // Запрос хода игрока
 std::string requestMove() {
     std::string doMove = "";
-    std::string variant[]{"L", "R", "U", "D", "LOAD", "SAVE"};
+    std::string variant[]{"L", "R", "U", "D", "LOAD", "SAVE", "EXIT"};
     bool valid = true;
 
     do {
