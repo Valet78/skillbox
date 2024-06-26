@@ -21,7 +21,6 @@ int main() {
 
 // *************************************
 
-
 // Проверка слов
 bool checkStrings(std::wstring &word1, std::wstring &word2) {
     std::map<char, int> mapOne;

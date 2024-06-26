@@ -6,10 +6,11 @@ int main() {
     std::string ask = "";
     int seqNumber = 1;
 
-//    testMap();
+    testMap();
 
     do {
         system("cls");
+
         std::wcout << L"Программа «Регистратура»" << std::endl << std::endl;
         std::wcout << L"Введите свою фамилию для постановки в очередь или следующие значения:" << std::endl;
         std::wcout << L"\"Next\"    - для вызова следующего в очереди;" << std::endl;

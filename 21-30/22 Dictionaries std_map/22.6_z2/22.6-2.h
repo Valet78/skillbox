@@ -6,7 +6,8 @@
 
 
 // Глобальные переменные
-std::multimap<std::string, int> queueOfCustomers;
+std::map<std::string, int> queueOfCustomers;
+std::map<std::string, int> surnameCount;
 
 // Функции
 void testMap();                                // Тестовое заполнение
