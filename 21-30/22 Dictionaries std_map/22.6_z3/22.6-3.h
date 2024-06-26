@@ -1,10 +1,8 @@
 #pragma once
 
 #include <iostream>
-
-
-
-// Глобальные переменные
-
+#include <map>
 
 // Функции
+std::wstring inputText(std::wstring);                // Ввод текста и проверка на пустую строку
+bool checkStrings(std::wstring &, std::wstring &);   // Проверка слов

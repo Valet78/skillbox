@@ -1,0 +1,14 @@
+file
+object
+text file
+binary file
+variable
+function
+pointer
+link
+navigation system
+text
+development environment
+recursive functions
+program
+binary files
