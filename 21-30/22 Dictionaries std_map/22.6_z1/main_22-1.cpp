@@ -62,7 +62,6 @@ int main() {
 
                         } else {
                             surnameToNumber.insert({inFamily, std::vector<std::wstring>{numTelephone}});
-
                         }
                     }
                 }
@@ -75,7 +74,6 @@ int main() {
         std::cout << std::endl;
         system("pause");
     } while (ask != L"Exit");
-
 
     system("pause");
     return 0;

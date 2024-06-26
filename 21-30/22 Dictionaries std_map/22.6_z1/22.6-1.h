@@ -4,7 +4,6 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <algorithm>
 
 // Глобальные переменные
 std::map<std::wstring, std::wstring> phDirectory;
