@@ -1,11 +1,12 @@
 #pragma once
 
 #include <iostream>
+//#include <locale>
 
-#define SPRING L"SPRING"
-#define SUMMER L"SUMMER"
-#define AUTUMN L"AUTUMN"
-#define WINTER L"WINTER"
+//#define SPRING L"Весна"
+//#define SUMMER L"Лето"
+//#define AUTUMN L"Осень"
+#define WINTER L"Зима"
 
 
 
